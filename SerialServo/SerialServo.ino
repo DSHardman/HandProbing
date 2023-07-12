@@ -1,27 +1,28 @@
-/* Sweep
- by BARRAGAN <http://barraganstudio.com>
- This example code is in the public domain.
-
- modified 8 Nov 2013
- by Scott Fitzgerald
- https://www.arduino.cc/en/Tutorial/LibraryExamples/Sweep
-*/
-
 #include <Servo.h>
 
-Servo myservo;  // create servo object to control a servo
-// twelve servo objects can be created on most boards
+Servo pincher;
 
-int pos = 0;    // variable to store the servo position
+int openpinch = 0;
+int closepinch = 50;
 
 void setup() {
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  pincher.attach(9);
+  pincher.write(openpinch);
+  Serial.begin(9600);
+  while (Serial.available() <= 0) {
+    delay(300);
+  }
 }
 
 void loop() {
-    myservo.write(120);
-    delay(2000);
-    myservo.write(0);
-    delay(2000);
+  if (Serial.available() > 0) {
+    char serialchar = Serial.read();
 
+    if (serialchar == 'o') {
+      pincher.write(openpinch);
+    }
+    if (serialchar =='c') {
+      pincher.write(closepinch);
+    }
+  }
 }
