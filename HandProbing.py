@@ -41,6 +41,10 @@ urnie = kgr.kg_robot(port=30010, db_host="169.254.150.50")
 urnie.set_tcp([0, 0.037898, 0.12552, 0, 0, 0])  # Tip of pincher
 urnie.movej([-4.23929, -1.69484, 2.50654, -4.00664, -2.11265, -1.59363], acc=0.5, vel=1.0)
 
+com = "COM10"
+ser = serial.Serial(port=com, baudrate=9600)
+ser.write(str.encode('o\n'))
+print("Connected to Arduino")
 
 # # Connect to EIT board
 # serial_handler = OpenEIT.backend.SerialHandler(queue.Queue())
@@ -64,9 +68,9 @@ def change_sides():
         urnie.movej([-4.37041, -1.80371, 2.13308, -3.52067, -1.97533, -1.58118], acc=0.5, vel=1.0)  # Upper
         urnie.movej([-4.37043, -1.80366, 2.13297, -3.52064, -1.97533, 1.55576], acc=2.0, vel=2.0)  # Perform rotation
         urnie.movej([-4.60221, -1.40817, 1.19664, -1.40745, -1.55043, 1.72113], acc=0.5, vel=2.0)  # To RHS
-        urnie.movej([-4.64317, -0.774634, 0.634354, -0.201507, -1.4302, 1.60055], acc=0.5, vel=1.0)  # Rightmost
+        urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)  # Rightmost
     else:
-        urnie.movej([-4.64317, -0.774634, 0.634354, -0.201507, -1.4302, 1.60055], acc=0.5, vel=1.0)  # Rightmost
+        urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)  # Rightmost
         urnie.movej([-4.60221, -1.40817, 1.19664, -1.40745, -1.55043, 1.72113], acc=0.5, vel=1.0)  # Upper vertical
         urnie.movej([-4.37043, -1.80366, 2.13297, -3.52064, -1.97533, 1.55576], acc=0.5, vel=2.0)  # To LHS
         urnie.movej([-4.37041, -1.80371, 2.13308, -3.52067, -1.97533, -1.58118], acc=2.0, vel=2.0)  # Perform rotation
@@ -97,7 +101,21 @@ def pressrecord(x, y, savestring):
     xy = [x, y]
 
     currentpose = urnie.getl()
+    if x > 130:
+        urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)
+        urnie.movel(np.add(currentpose, [-currentpose[0]+0.195, 0, 0, 0, 0, 0]), acc=0.02, vel=0.02)
+        currentpose = urnie.getl()
+
     urnie.movel([currentpose[0], zero_yz_robot[0]-x/1000, zero_yz_robot[1]+y/1000, currentpose[3], currentpose[4], currentpose[5]], acc=0.02, vel=0.02)
+    newpose = urnie.getl()
+    ser.write(str.encode('c\n'))
+    urnie.movel(np.add(newpose, [-newpose[0]+0.176, 0, 0, 0, 0, 0]), acc=0.02, vel=0.02)
+    time.sleep(5)
+    ser.write(str.encode('o\n'))
+    urnie.movel(newpose, acc=0.02, vel=0.02)
+
+
+
 
     # serial_state = serial_handler.updater
     # while serial_handler.updater == serial_state:
@@ -128,6 +146,11 @@ def pressrecord(x, y, savestring):
    #  np.save('Responses/' + foldername + '/down_' + savestring, data)
 
     # urnie.movel(startingpose, acc=0.01, vel=0.01)
+    if x > 130:
+        currentpose = urnie.getl()
+        urnie.movel(np.add(currentpose, [-currentpose[0]+0.212181, 0, 0, 0, 0, 0]), acc=0.02, vel=0.02)
+        urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)
+
 
 
 coord = [0, 0]

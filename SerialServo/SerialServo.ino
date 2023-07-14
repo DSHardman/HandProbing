@@ -2,12 +2,14 @@
 
 Servo pincher;
 
-int openpinch = 0;
-int closepinch = 50;
+int openpinch = 90;
+int closepinch = 20;
+int currentstate;
 
 void setup() {
   pincher.attach(9);
   pincher.write(openpinch);
+  currentstate = openpinch;
   Serial.begin(9600);
   while (Serial.available() <= 0) {
     delay(300);
@@ -19,10 +21,22 @@ void loop() {
     char serialchar = Serial.read();
 
     if (serialchar == 'o') {
-      pincher.write(openpinch);
+      if (currentstate != openpinch) {
+        for (int i=closepinch; i<openpinch; i+=1) {
+          pincher.write(i);
+          delay(20);
+        }
+        currentstate = openpinch;
+      }
     }
     if (serialchar =='c') {
-      pincher.write(closepinch);
+      if (currentstate != closepinch) {
+        for (int i=openpinch; i>closepinch; i-=1) {
+          pincher.write(i);
+          delay(20);
+        }
+        currentstate = closepinch;
+      }
     }
   }
 }
