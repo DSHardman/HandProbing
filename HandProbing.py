@@ -46,12 +46,12 @@ ser = serial.Serial(port=com, baudrate=9600)
 ser.write(str.encode('o\n'))
 print("Connected to Arduino")
 
-# # Connect to EIT board
-# serial_handler = OpenEIT.backend.SerialHandler(queue.Queue())
-# serial_handler.connect('COM5')
-# serial_handler.setmode('c')
-# serial_handler.start_recording()
-# time.sleep(20)  # Give ample time to connect and start returning data
+# Connect to EIT board
+serial_handler = OpenEIT.backend.SerialHandler(queue.Queue())
+serial_handler.connect('COM11')
+serial_handler.setmode('c')
+serial_handler.start_recording()
+time.sleep(20)  # Give ample time to connect and start returning data
 
 
 def check_side_change(coord1, coord2):
@@ -100,6 +100,17 @@ def choose_random_point(coord):
 def pressrecord(x, y, savestring):
     xy = [x, y]
 
+    serial_state = serial_handler.updater
+    while serial_handler.updater == serial_state:
+        pass  # wait for last set of readings to end
+
+    while serial_handler.updater != serial_state:
+        pass  # wait for new set of readings to end
+
+    data = OpenEIT.backend.serialhandler.parse_any_line(serial_handler.raw_text, 'c')
+
+    np.save('Responses/' + foldername + '/up_' + savestring, data)
+
     currentpose = urnie.getl()
     if x > 130:
         urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)
@@ -111,41 +122,23 @@ def pressrecord(x, y, savestring):
     ser.write(str.encode('c\n'))
     urnie.movel(np.add(newpose, [-newpose[0]+0.176, 0, 0, 0, 0, 0]), acc=0.02, vel=0.02)
     time.sleep(5)
+
+    # Save data
+    serial_state = serial_handler.updater
+    while serial_handler.updater == serial_state:
+        pass  # wait for last set of readings to end
+
+    while serial_handler.updater != serial_state:
+        pass  # wait for new set of readings to end
+
+    data = OpenEIT.backend.serialhandler.parse_any_line(serial_handler.raw_text, 'c')
+    np.save('Responses/' + foldername + '/position_' + savestring, xy)
+    np.save('Responses/' + foldername + '/down_' + savestring, data)
+
     ser.write(str.encode('o\n'))
     urnie.movel(newpose, acc=0.02, vel=0.02)
 
 
-
-
-    # serial_state = serial_handler.updater
-    # while serial_handler.updater == serial_state:
-    #     pass  # wait for last set of readings to end
-    #
-    # while serial_handler.updater != serial_state:
-    #     pass  # wait for new set of readings to end
-    #
-    # data = OpenEIT.backend.serialhandler.parse_any_line(serial_handler.raw_text, 'c')
-    #
-    # np.save('responses/' + foldername + '/up_' + savestring, data)
-
-    # downpose = np.add(zeropose, [x, y, -depth, 0, 0, 0])
-    # downpose = np.add(startingpose, [0, 0, -(0.01+depth), 0, 0, 0])
-    # urnie.movel(downpose, acc=0.01, vel=0.01)
-
-   #  # Save data
-   #  serial_state = serial_handler.updater
-   #  while serial_handler.updater == serial_state:
-   #      pass  # wait for last set of readings to end
-   #
-   #  while serial_handler.updater != serial_state:
-   #      pass  # wait for new set of readings to end
-   #
-   #  data = OpenEIT.backend.serialhandler.parse_any_line(serial_handler.raw_text, 'a')
-   # # print(data)
-   #  np.save('Responses/' + foldername + '/position_' + savestring, xy)
-   #  np.save('Responses/' + foldername + '/down_' + savestring, data)
-
-    # urnie.movel(startingpose, acc=0.01, vel=0.01)
     if x > 130:
         currentpose = urnie.getl()
         urnie.movel(np.add(currentpose, [-currentpose[0]+0.212181, 0, 0, 0, 0, 0]), acc=0.02, vel=0.02)
