@@ -136,6 +136,7 @@ def pressrecord(x, y, savestring):
     np.save('Responses/' + foldername + '/down_' + savestring, data)
 
     ser.write(str.encode('o\n'))
+    time.sleep(5)
     urnie.movel(newpose, acc=0.02, vel=0.02)
 
 
@@ -145,9 +146,9 @@ def pressrecord(x, y, savestring):
         urnie.movej([-4.63778, -0.934103, 0.832699, -0.24062, -1.4246, 1.60202], acc=0.5, vel=1.0)
 
 
-
 coord = [0, 0]
-for i in range(5):
+
+for i in range(390, 10000):
     plt.cla()
     plt.title(str(i))
     coord, change_sides_bool = choose_random_point(coord)
