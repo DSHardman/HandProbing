@@ -41,15 +41,18 @@
 #define CHIP_SEL_AD5930    3  // Chip select pin for AD5930
 #define CHIP_SEL_DRIVE     0  // Chip select pin for driving digital rheostat
 #define CHIP_SEL_MEAS      1 // Chip select pin for measuring digital rheostat
-#define CHIP_SEL_MUX_SRC   24 // Chip select pin for source electrodes MUX - mux1
-#define CHIP_SEL_MUX_SINK  28 // Chip select pin for sink electrodes MUX - mux1
-#define CHIP_SEL_MUX_VP    30 // Chip select for voltage measurement positive electrodes MUX - mux1
-#define CHIP_SEL_MUX_VN    32 // Chip select for voltage measurement negative electrodes MUX - mux1
 
-#define CHIP_SEL_MUX_SRC_2   29 // Chip select pin for source electrodes MUX - mux2
-#define CHIP_SEL_MUX_SINK_2 25 // Chip select pin for sink electrodes MUX - mux2
-#define CHIP_SEL_MUX_VP_2    33 // Chip select for voltage measurement positive electrodes MUX - mux2
-#define CHIP_SEL_MUX_VN_2    31 // Chip select for voltage measurement negative electrodes MUX - mux2
+//// Board 1
+//#define CHIP_SEL_MUX_SRC   24 // Chip select pin for source electrodes MUX - mux1
+//#define CHIP_SEL_MUX_SINK  28 // Chip select pin for sink electrodes MUX - mux1
+//#define CHIP_SEL_MUX_VP    30 // Chip select for voltage measurement positive electrodes MUX - mux1
+//#define CHIP_SEL_MUX_VN    32 // Chip select for voltage measurement negative electrodes MUX - mux1
+
+// Board 2
+#define CHIP_SEL_MUX_SRC   29 // Chip select pin for source electrodes MUX - mux2
+#define CHIP_SEL_MUX_SINK 25 // Chip select pin for sink electrodes MUX - mux2
+#define CHIP_SEL_MUX_VP    33 // Chip select for voltage measurement positive electrodes MUX - mux2
+#define CHIP_SEL_MUX_VN    31 // Chip select for voltage measurement negative electrodes MUX - mux2
 
 #define AD5930_MSBOUT_PIN  6
 #define AD5930_INT_PIN     5  // Pulse high to reset internal state machine

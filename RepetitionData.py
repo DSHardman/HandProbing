@@ -45,7 +45,7 @@ ser.write(str.encode('o\n'))
 print("Connected to Arduino")
 
 # Connect to EIT board
-com2 = "COM11"
+com2 = "COM8"
 ser2 = serial.Serial(port=com2, baudrate=11520)
 print("Connected to EIT board")
 
@@ -81,13 +81,11 @@ def change_sides():
 def pressrecord(x, y, savestring):
     xy = [x, y]
 
-    for repetition in range(5):
+    for repetition in range(1):
         t0 = time.time()
         lines = []
         while time.time() - t0 < savetime:
             lines.append(ser2.readline())
-
-        change = check_side_change([x, y], coord)
 
         # If probing thumb area, first offset pincher to not collide during positioning
         currentpose = urnie.getl()
@@ -123,7 +121,8 @@ def pressrecord(x, y, savestring):
         while time.time() - t0 < savetime:
             lines.append(ser2.readline())
 
-        filename = foldername + "_" + freq + "_" + meastype + "_" + savestring + "_" + str(repetition+1) + ".txt"
+        locations = ["A", "B", "C", "D", "E"]
+        filename = foldername + freq + "_" + meastype + "_" + locations[savestring] + "_" + str(repetition+1) + ".txt"
         f = open(filename, "w")
         for line in lines:
             f.write(str(line))
@@ -132,7 +131,7 @@ def pressrecord(x, y, savestring):
 
 
 
-coord = [[0, 0], [20, 130], [45, 105], [80, 180], [170, 90], [100, 75]]
+coord = [[0, 0], [17, 130], [45, 105], [80, 180], [166, 90], [100, 75]]
 
 for i in range(1, len(coord)):
     if check_side_change(coord[i], coord[i-1]):
