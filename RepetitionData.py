@@ -81,7 +81,7 @@ def change_sides():
 def pressrecord(x, y, savestring):
     xy = [x, y]
 
-    for repetition in range(1):
+    for repetition in range(3):
         t0 = time.time()
         lines = []
         while time.time() - t0 < savetime:
