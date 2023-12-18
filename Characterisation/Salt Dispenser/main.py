@@ -4,7 +4,7 @@ import time
 compwm = "COM16"  # Of Arduino
 comgcode = "COM6"  # Of Printer
 
-length = 90
+length = 150
 
 # # Connect to Arduino COM port
 pwm = serial.Serial(port=compwm, baudrate=9600)
@@ -17,7 +17,8 @@ time.sleep(1)
 print("Connected.")
 
 
-for speed in range(2000, 2010, 50):
+# salt membrane done 2000
+for speed in range(1000, 1012, 2):
     # Turn on dispenser
     pwm.write(str.encode('200\n'))
     # # Create channel
@@ -32,7 +33,7 @@ for speed in range(2000, 2010, 50):
 
     gcode.write(b'G92 X0\r\n')
     time.sleep(1)
-    gcode.write(b'G1 F1000 X28\r\n')
+    gcode.write(b'G1 F1000 X20\r\n')
     time.sleep(1)
     gcode.write(b'G1 Y0\r\n')
     time.sleep(1)

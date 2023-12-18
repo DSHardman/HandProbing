@@ -1,4 +1,4 @@
-function [spectra, timestamps] = ExtractSpectra(filename)
+function [spectra, timestamps] = ExtractSpectra(filename, plotaverage)
     lines = readlines(filename);
     lines = lines(3:end-2);
 
@@ -35,6 +35,16 @@ function [spectra, timestamps] = ExtractSpectra(filename)
             else
                 spectra(j, k) = 0;
             end
+        end
+    end
+
+    if nargin == 2
+        if plotaverage
+            frequencies = [200 500 800 1000 2000 5000 8000 10000 15000,...
+                20000 30000 40000 50000 60000 70000];
+            touches = find(spectra(:, 1)) < 1e5;
+            base1 = mean(spectra(touches, :));
+            plot(frequencies, base1);
         end
     end
 end

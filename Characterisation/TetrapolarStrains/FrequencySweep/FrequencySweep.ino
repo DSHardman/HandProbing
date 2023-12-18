@@ -880,43 +880,28 @@ void read_frame(meas_t drive_type, meas_t meas_type, double * rms_array, double 
 //    mux_write(CHIP_SEL_MUX_VN, 0, MUX_DIS);
 }
 
-void read_all_at_freq(int freq, double * rms_array, double * mag_array, double * phase_array, uint8_t num_elec) // added by david 11/12/23
+void print_freq(int freq, double * rms_array, double * mag_array, double * phase_array, uint8_t num_elec) // added by david 15/12/23
 {
-    uint8_t src_pin, sink_pin, vp_pin, vn_pin;
+
+    AD5930_Set_Start_Freq(freq);
+    calibrate_samples_at_freq(freq);
     uint16_t num_meas = 0;
 
-    for(int src_pin = 0; src_pin < num_elec; src_pin++)
-    {
-        for(int sink_pin = 0; sink_pin < num_elec; sink_pin++)
-        {
-            if(sink_pin != src_pin)
-            {
-                mux_write(CHIP_SEL_MUX_SRC, elec_to_mux[src_pin], MUX_EN);
-                mux_write(CHIP_SEL_MUX_SINK, elec_to_mux[sink_pin], MUX_EN);
+    mux_write(CHIP_SEL_MUX_SRC, 0, MUX_EN);
+    mux_write(CHIP_SEL_MUX_SINK, 1, MUX_EN);
+    mux_write(CHIP_SEL_MUX_VP, 2, MUX_EN);
+    mux_write(CHIP_SEL_MUX_VN, 3, MUX_EN);
 
-                for(vp_pin = 0; vp_pin < num_elec; vp_pin++)
-                {
-                    if((vp_pin != src_pin)&&(vp_pin != sink_pin))
-                    {
-                        for(vn_pin = 0; vn_pin < num_elec; vn_pin++)
-                        {
-                            if((vn_pin != src_pin)&&(vn_pin != sink_pin)&&(vn_pin != vp_pin))
-                            {
-                                num_meas++; // This should have been after reading - results in off by one error for this data
-                                mux_write(CHIP_SEL_MUX_VP, elec_to_mux[vp_pin], MUX_EN);
-                                mux_write(CHIP_SEL_MUX_VN, elec_to_mux[vn_pin], MUX_EN);
-                
-                                delayMicroseconds(150);
-                
-                                read_signal_at_freq(freq, rms_array + num_meas, mag_array + num_meas, phase_array + num_meas, NULL, 0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-    }
+    delayMicroseconds(150);
+
+    read_signal_at_freq(freq, rms_array + num_meas, mag_array + num_meas, phase_array + num_meas, NULL, 0);
+
+    delayMicroseconds(150);
+
+    Serial.print(rms_array[0], 8);
+    Serial.print(", ");
+    // Serial.print(phase_array[0], 4);
+    // Serial.print(", ");
 
 }
 
@@ -1053,47 +1038,16 @@ void loop()
   uint16_t i;
 
   if (millis() - t0 > 350) {
-  AD5930_Set_Start_Freq(10000);
-  calibrate_samples_at_freq(10000);
-  read_all_at_freq(100000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES); // Wrong frequency here, but does not affect measurements - just the final phase factor
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_rms[i], 4);
-    Serial.print(", ");
-  }
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_phase[i], 4);
-    Serial.print(", ");
-  }
-
-  AD5930_Set_Start_Freq(50000);
-  calibrate_samples_at_freq(50000);
-  read_all_at_freq(50000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_rms[i], 4);
-    Serial.print(", ");
-  }
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_phase[i], 4);
-    Serial.print(", ");
-  }
-
-  AD5930_Set_Start_Freq(100000);
-  calibrate_samples_at_freq(100000);
-  read_all_at_freq(100000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_rms[i], 4);
-    Serial.print(", ");
-  }
-  for(i = 0; i < 1680; i++)
-  {       
-    Serial.print(signal_phase[i], 4);
-    Serial.print(", ");
-  }
+  print_freq(1000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(2000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(5000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(7000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(10000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(20000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(50000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(70000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(100000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
+  print_freq(200000, signal_rms, signal_mag, signal_phase, NUM_ELECTRODES);
 
   t0 = millis();
 
