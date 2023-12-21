@@ -1,6 +1,6 @@
 classdef Recording8
     % Stores experimental recordings from all permutations of 8 electrodes
-    % at 3 frequencies (10kHz, 50kHz, 100kHz)
+    % at 3 frequencies (10kHz, 50kHz, 100kHz), with error
 
     properties
         times % in seconds

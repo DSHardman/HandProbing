@@ -1,5 +1,5 @@
 clear device
-device = serialport("COM12",9600);
+device = serialport("COM11",9600);
 
 for i=1:1
     data = readline(device); 
