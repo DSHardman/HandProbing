@@ -5,6 +5,8 @@ classdef Recording8
     properties
         times % in seconds
         data % raw data - matrix with width 10080
+        eventboundaries % start and stop indicies of each event
+        eventlabels % Text descriptions of events
     end
 
     methods
@@ -57,6 +59,19 @@ classdef Recording8
 
         function dataout = phase100k(obj)
             dataout = obj.data(:, 8396:10074);
+        end
+
+        function outobj = logevents(obj, n)
+            plot(obj.rms50k());
+            obj.eventboundaries = zeros([n, 2]);
+            for i = 1:n
+                title(string(i));
+                coord = ginput(1);
+                obj.eventboundaries(i, 1) = round(coord(1));
+                coord = ginput(1);
+                obj.eventboundaries(i, 2) = round(coord(1));
+            end
+            outobj = obj;
         end
     end
 end

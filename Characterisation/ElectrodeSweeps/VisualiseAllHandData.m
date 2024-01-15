@@ -1,0 +1,39 @@
+% close = HandSweep("Data/Hand/quarters.log");
+
+%% RMS
+figure();
+for i = 1:5
+    subplot(5,3,i*3-2);
+    heatmap(normalize(close.rms10k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+    subplot(5,3,i*3-1);
+    heatmap(normalize(close.rms50k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+    subplot(5,3,i*3);
+    heatmap(normalize(close.rms100k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+end
+sgtitle("RMS");
+set(gcf, 'color', 'w', 'position', [377    86   632   800]);
+
+%% PHASE
+figure();
+for i = 1:5
+    subplot(5,3,i*3-2);
+    heatmap(normalize(close.phase10k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+    subplot(5,3,i*3-1);
+    heatmap(normalize(close.phase50k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+    subplot(5,3,i*3);
+    heatmap(normalize(close.phase100k(i), "range", [0 1]).', "colormap", gray,...
+        'XDisplayLabels',NaN*ones(size(close.rms10k(i), 1),1),...
+        'YDisplayLabels',NaN*ones(size(close.rms10k(i), 2),1)); grid off; colorbar off
+end
+sgtitle("Phase");
+set(gcf, 'color', 'w', 'position', [377    86   632   800]);
