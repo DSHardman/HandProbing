@@ -7,6 +7,7 @@ classdef Recording8
         data % raw data - matrix with width 10080
         eventboundaries % start and stop indicies of each event
         eventlabels % Text descriptions of events
+        fingerprint % at 10k rms
     end
 
     methods
@@ -62,7 +63,7 @@ classdef Recording8
         end
 
         function outobj = logevents(obj, n)
-            plot(obj.rms50k());
+            plot(obj.rms10k());
             obj.eventboundaries = zeros([n, 2]);
             for i = 1:n
                 title(string(i));
@@ -72,6 +73,11 @@ classdef Recording8
                 obj.eventboundaries(i, 2) = round(coord(1));
             end
             outobj = obj;
+        end
+
+        function plotfingerprint(obj)
+            heatmap(reshape([obj.fingerprint; NaN], [30, 56]).',...% "colormap", gray,...
+        'XDisplayLabels',NaN*ones(30,1), 'YDisplayLabels',NaN*ones(56,1));
         end
     end
 end

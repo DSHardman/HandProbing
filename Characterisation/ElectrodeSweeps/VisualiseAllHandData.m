@@ -1,4 +1,4 @@
-% close = HandSweep("Data/Hand/quarters.log");
+close = HandSweep("Data/Hand/quarters.log");
 
 %% RMS
 figure();

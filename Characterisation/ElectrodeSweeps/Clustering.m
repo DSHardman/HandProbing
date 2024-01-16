@@ -7,6 +7,10 @@ legendlabel = {"none"; "touch"; "presshuman";...
 
 % s={sctouch scglovepress};
 % legendlabel = {"none"; "Stouch"; "Sglove"};
+% 
+% s={fingertipmats};
+% legendlabel = {"none"; "fingertip"};
+
 
 subplot(1,2,1);
 convertor = totalScatter(s, legendlabel, "r10");

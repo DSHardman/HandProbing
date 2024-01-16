@@ -14,15 +14,16 @@ classdef HandSweep
             lines = readlines(filename);
             lines = lines(3:end-1);
         
-            timestamps = zeros([length(lines), 1]);
+            %timestamps = zeros([length(lines), 1]);
             data = zeros([length(lines), 5*10080]);
             for i = 1:length(lines)
                 line = char(lines(i));
-                if i == 1
-                    t0 = datetime(line(2:24));
-                else
-                    timestamps(i) = seconds(datetime(line(2:24)) - t0);
-                end
+                % if i == 1
+                    % t0 = datetime(line(2:24));
+                % else
+                    % timestamps(i) = seconds(datetime(line(2:24)) - t0);
+                    timestamps(i) = datetime(line(2:24));
+                % end
                 linedata = str2double(split(line(27:end-2), ', '));
                 data(i, :) = linedata;
             end
