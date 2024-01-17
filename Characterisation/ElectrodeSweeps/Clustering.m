@@ -2,6 +2,7 @@ s={touch presshuman pressrobot steelbolts};
 legendlabel = {"none"; "touch"; "presshuman";...
                 "pressrobot"; "steelbolts"};
 
+
 % s={Htouch Hpresshuman Hpressglove};
 % legendlabel = {"none"; "touch"; "presshuman"; "pressglove"};
 
@@ -18,6 +19,8 @@ title("RMS");
 subplot(1,2,2);
 totalScatter(s, legendlabel, "p10");
 title("Phase");
+
+set(gcf, 'color', 'w', 'position', [183         334        1103         420]);
 
 %% Functions
 function convert = totalScatter(s, legendlabel, type)
@@ -56,7 +59,7 @@ function convert = totalScatter(s, legendlabel, type)
         j = j + size((s{1, i}.rms10k),1);
         hold on
     end
-    legend(legendlabel);
+    % legend(legendlabel);
 end
 
 function scatterevents(Y, recordingobject, startingindex, col)

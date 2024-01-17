@@ -5,6 +5,8 @@ classdef HandSweep
     properties
         times % in seconds
         data % raw data - matrix with width 50400
+        eventboundaries
+        eventlabels
     end
 
     methods
@@ -34,26 +36,44 @@ classdef HandSweep
         end
 
         function dataout = rms10k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 1+((set-1)*3360):1680+((set-1)*3360));
         end
 
         function dataout = phase10k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 1681+((set-1)*3360):3360+((set-1)*3360));
         end
 
         function dataout = rms50k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 16801+((set-1)*3360):18480+((set-1)*3360));
         end
 
         function dataout = phase50k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 18481+((set-1)*3360):20160+((set-1)*3360));
         end
 
         function dataout = rms100k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 33601+((set-1)*3360):35280+((set-1)*3360));
         end
 
         function dataout = phase100k(obj, set)
+            if nargin == 1
+                set = 1;
+            end
             dataout = obj.data(:, 35281+((set-1)*3360):36960+((set-1)*3360));
         end
     end

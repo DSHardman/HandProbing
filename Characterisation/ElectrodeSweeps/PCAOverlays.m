@@ -1,12 +1,12 @@
-s={steelbolts touch presshuman pressrobot};
-legendlabel = {"none"; "steelbolts"; "touch"; "presshuman";...
-                "pressrobot"};
+% s={steelbolts touch presshuman pressrobot};
+% legendlabel = {"none"; "steelbolts"; "touch"; "presshuman";...
+%                 "pressrobot"};
 
-% s={touchsingle damages};
-% legendlabel = {"none"; "touchsingle"; "damages"};
+s={bctouch};
+legendlabel = {"none";"bctouch"};
 
 [coeff,score,latent,tsquared,explained, mu] = totalpca(s, legendlabel, "r10", 1);
-touchsingle.fingerprint = abs(coeff(:, 1));
+bhtouch.fingerprint = coeff(:, 1);
 
 %%
 
@@ -122,7 +122,7 @@ function pcaevents(Y, recordingobject, startingindex, col)
             startingindex+recordingobject.eventboundaries(i,2), 1));
         yloc = mean(Y(startingindex+recordingobject.eventboundaries(i,1):...
             startingindex+recordingobject.eventboundaries(i,2), 2));
-        text(xloc+0.02, yloc, recordingobject.eventlabels(i), "color", col);
+        text(xloc+0.002, yloc, recordingobject.eventlabels(i), "color", col);
 
         start = startingindex + recordingobject.eventboundaries(i,2) + 5;
     end
