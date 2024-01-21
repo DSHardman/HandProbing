@@ -1,10 +1,10 @@
-% s={steelbolts touch presshuman pressrobot};
-% legendlabel = {"none"; "steelbolts"; "touch"; "presshuman";...
-%                 "pressrobot"};
+s={steelbolts touch presshuman pressrobot};
+legendlabel = {"none"; "steelbolts"; "touch"; "presshuman";...
+                "pressrobot"};
 
-s={bctouch};
-legendlabel = {"none";"bctouch"};
 
+% if the last argument here is one, PCA uses only first entry. Leave blank
+% to use all.
 [coeff,score,latent,tsquared,explained, mu] = totalpca(s, legendlabel, "r10", 1);
 bhtouch.fingerprint = coeff(:, 1);
 
