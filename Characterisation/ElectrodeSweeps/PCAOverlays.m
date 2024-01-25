@@ -1,6 +1,5 @@
-s={steelbolts touch presshuman pressrobot};
-legendlabel = {"none"; "steelbolts"; "touch"; "presshuman";...
-                "pressrobot"};
+s={randombolts};
+legendlabel = {"none"; "randombolts"};
 
 
 % if the last argument here is one, PCA uses only first entry. Leave blank
