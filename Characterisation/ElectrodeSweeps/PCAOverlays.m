@@ -1,11 +1,11 @@
-s={randombolts};
-legendlabel = {"none"; "randombolts"};
+s={steelbolts, melting};
+legendlabel = {"none"; "steelbolts"; "melting"};
 
 
 % if the last argument here is one, PCA uses only first entry. Leave blank
 % to use all.
 [coeff,score,latent,tsquared,explained, mu] = totalpca(s, legendlabel, "r10", 1);
-bhtouch.fingerprint = coeff(:, 1);
+% bhtouch.fingerprint = coeff(:, 1);
 
 %%
 
