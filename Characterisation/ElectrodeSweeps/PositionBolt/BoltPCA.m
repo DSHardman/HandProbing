@@ -7,9 +7,6 @@ trimmedtests = deltaresponses(:, 1:1679);
 [coeff,score,latent,tsquared,explained, mu] = pca(trimmedtests);
 Y = (trimmedtests-mu)*coeff(:,1:2);
 
-scatter(Y(:,1), Y(:,2), 20, "r");
-return
-
 axis3 = zeros([5000,1]);
 
 for i = 1:5000
