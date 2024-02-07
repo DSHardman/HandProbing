@@ -1,5 +1,9 @@
-s={touchsingle touch presshuman steelbolts melting damages pressrobot plasticcaps};
-titles = {"TouchSingle"; "Touch"; "PressHuman"; "SteelBolts"; "Melting";...
+% s={touchsingle touch presshuman steelbolts melting damages pressrobot plasticcaps};
+% titles = {"TouchSingle"; "Touch"; "PressHuman"; "SteelBolts"; "Melting";...
+%     "Damages"; "PressRobot"; "PlasticCaps"};
+
+s={touch presshuman steelbolts melting damages pressrobot plasticcaps};
+titles = {"Touch"; "PressHuman"; "SteelBolts"; "Melting";...
     "Damages"; "PressRobot"; "PlasticCaps"};
 
 similarities = zeros(length(s));
@@ -10,11 +14,54 @@ for i = 1:length(s)
     end
 end
 
-heatmap(similarities);
+% heatmap(similarities);
+
+group1 = [];
+group2 = [];
+weights = [];
+for i = 1:length(titles)
+    for j = i+1:length(titles)
+        group1 = [group1; titles{i}];
+        group2 = [group2; titles{j}];
+        weights = [weights; similarities(i, j)];
+    end
+end
+
+% weights = (weights-min(weights))*5 + 0.2;
+% chordPlot(string(titles), table(group1, group2, 10*weights));
+
+% Generate text file for chord diagram on http://www.datasmith.org/2018/06/02/a-bold-chord-diagram-generator/
+textstring = "";
+for i = 1:length(weights)
+    textstring = textstring + group1(i) + ", " + group2(i) + ", " + string(abs(weights(i))) + "\n";
+end
+fid = fopen('connections.txt','wt');
+fprintf(fid, textstring);
+fclose(fid);
 
 %% plot fingerprints
 
-my_colors
+% my_colors
+
+% To match chord diagram
+% colors = (1/255)*[31 119 182;
+%                 174 199 232;
+%                 254 126 12;
+%                 254 188 120;
+%                 44 160 44;
+%                 149 223 136;
+%                 214 39 40;
+%                 0 0 0];
+
+colors = (1/255)*[141 199 129;
+                188 175 211;
+                244 192 139;
+                253 254 158;
+                71 109 174;
+                222 34 129;
+                179 93 38;
+                0 0 0];
+
 figure();
 for i = 1:length(s)
     subplot(1,length(s), i);

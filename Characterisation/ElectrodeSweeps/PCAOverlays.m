@@ -1,11 +1,11 @@
-s={steelbolts, melting};
-legendlabel = {"none"; "steelbolts"; "melting"};
+s={touch, melting};
+legendlabel = {"none"; "plasticcaps"; "melting"};
 
 
-% if the last argument here is one, PCA uses only first entry. Leave blank
+% if the last argument here is 1, PCA uses only first entry. Leave blank
 % to use all.
 [coeff,score,latent,tsquared,explained, mu] = totalpca(s, legendlabel, "r10", 1);
-% bhtouch.fingerprint = coeff(:, 1);
+pressrobot.fingerprint = coeff(:, 1);
 
 %%
 
@@ -34,6 +34,9 @@ function [coeff,score,latent,tsquared,explained, mu] = totalpca(s, legendlabel, 
         end
     end
     [coeff,score,latent,tsquared,explained, mu] = pca(allevents);
+    idx = kmeans(score(:, 1:2), 7, "start", "uniform", "replicates", 500, "maxiter", 1000);
+    sil = silhouette(score(:, 1:2), idx)
+    mean(sil)
         
     % subplot(1,3,1);
     % Pseudo-scatter for legend purposes
