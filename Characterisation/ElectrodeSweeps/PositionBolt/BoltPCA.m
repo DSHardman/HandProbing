@@ -1,4 +1,5 @@
-load("betterdeltaresponses.mat");
+load("SavedData/betterdeltaresponses.mat");
+load("SavedData/ExtractedPositions.mat");
 responses = deltaresponses;
 
 elecranking = [oppadinds; adadinds; oppoppinds];

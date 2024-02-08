@@ -19,30 +19,30 @@ save("ClassifyModalitiesRobotData.mat", "pca_acc", "opop_acc", "opad_acc", "adad
 
 %% Plot
 % Plot precalculated comparison between modalities
-load("ClassifyModalitiesData.mat");
-plot(nan, nan, "linewidth", 2, "color", "b"); % pseudodata for legend
-hold on
-plot(nan, nan, "linewidth", 2, "color", "r");
-plot(nan, nan, "linewidth", 2, "color", "g");
-plot(nan, nan, "linewidth", 2, "color", "k");
-% Actual plotting
-addplot(1-a_touch, 1:50, 'b');
-addplot(1-a_human, 1:50, 'r');
-addplot(1-a_robot, 1:50, 'g');
-addplot(1-a_steel, 1:50, 'k');
-ylabel("Classification Error (%)");
-set(gcf, 'position', [415   331   704   420]);
-legend({"Human Touch"; "Human Press"; "Robot Press"; "Steel Bolts"});
-legend boxoff
-ylim([0 35]);
+% load("ClassifyModalitiesData.mat");
+% plot(nan, nan, "linewidth", 2, "color", "b"); % pseudodata for legend
+% hold on
+% plot(nan, nan, "linewidth", 2, "color", "r");
+% plot(nan, nan, "linewidth", 2, "color", "g");
+% plot(nan, nan, "linewidth", 2, "color", "k");
+% % Actual plotting
+% addplot(1-a_touch, 1:50, 'b');
+% addplot(1-a_human, 1:50, 'r');
+% addplot(1-a_robot, 1:50, 'g');
+% addplot(1-a_steel, 1:50, 'k');
+% ylabel("Classification Error (%)");
+% set(gcf, 'position', [415   331   704   420]);
+% legend({"Human Touch"; "Human Press"; "Robot Press"; "Steel Bolts"});
+% legend boxoff
+% ylim([0 35]);
 
 % Plot precalculated comparison between RobotPress electrode configurations
-% load("ClassifyModalitiesRobotData.mat");
-% addplot(pca_acc, 1:50, 'b');
-% hold on
-% addplot(opop_acc, 1:50, 'r');
-% addplot(opad_acc, 1:50, 'g');
-% addplot(adad_acc, 1:50, 'k');
+load("ClassifyModalitiesRobotData.mat");
+addplot(pca_acc, 1:50, 'b');
+hold on
+addplot(opop_acc, 1:50, 'r');
+addplot(opad_acc, 1:50, 'g');
+addplot(adad_acc, 1:50, 'k');
 
 function accuracies = modalitypredict(modality, ranking)
     % Ranking input is a precalculated vector or leave blank for pca

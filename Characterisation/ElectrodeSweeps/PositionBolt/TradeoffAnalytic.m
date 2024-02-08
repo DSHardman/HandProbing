@@ -1,4 +1,5 @@
-load("betterdeltaresponses.mat"); % load data
+% load("betterdeltaresponses.mat"); % load data
+load("SavedData/ChannelExtractedReliable.mat");
 responses = deltaresponses;
 
 n = 1; % How many of the first PCA channels to average over
@@ -12,19 +13,19 @@ errorsadad = zeros([length(quantity), repetitions]);
 errorsall = zeros([length(quantity), repetitions]);
 errorsallwithphase = zeros([length(quantity), repetitions]);
 
-errorsNoppopp = zeros([length(quantity), repetitions]);
-errorsNoppad = zeros([length(quantity), repetitions]);
-errorsNadad = zeros([length(quantity), repetitions]);
+% errorsNoppopp = zeros([length(quantity), repetitions]);
+% errorsNoppad = zeros([length(quantity), repetitions]);
+% errorsNadad = zeros([length(quantity), repetitions]);
 
 for i = 1:length(quantity)
     quantity(i) % Print current location
     for j = 1:repetitions
         % Seperate 10% test data
         P = randperm(size(positions, 1));
-        trainresponses = responses(P(1:4500), :);
-        testresponses = responses(P(4501:end), :);
-        trainposs = positions(P(1:4500), :);
-        testposs = positions(P(4501:end), :);
+        trainresponses = responses(P(1:144), :);
+        testresponses = responses(P(145:end), :);
+        trainposs = positions(P(1:144), :);
+        testposs = positions(P(145:end), :);
 
 
         % Analytic Calculate
@@ -72,36 +73,36 @@ for i = 1:length(quantity)
             errorsoppad(i, j) = mean(rssq([predictionselecs-testposs].'));
         end
 
-        %NOPOP
-        if i < 13
-            ranking = Noppoppinds;
-            posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-            predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
-            errorsNoppopp(i, j) = mean(rssq([predictionselecs-testposs].'));
-        end
-
-        %NADAD
-        if i < 36
-            ranking = Nadadinds;
-            posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-            predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
-            errorsNadad(i, j) = mean(rssq([predictionselecs-testposs].'));
-        end
-
-        %NOPAD
-        if i < 17
-            ranking = Noppadinds;
-            posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-            predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
-            errorsNoppad(i, j) = mean(rssq([predictionselecs-testposs].'));
-        end
+        % %NOPOP
+        % if i < 13
+        %     ranking = Noppoppinds;
+        %     posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        %     predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
+        %     errorsNoppopp(i, j) = mean(rssq([predictionselecs-testposs].'));
+        % end
+        % 
+        % %NADAD
+        % if i < 36
+        %     ranking = Nadadinds;
+        %     posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        %     predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
+        %     errorsNadad(i, j) = mean(rssq([predictionselecs-testposs].'));
+        % end
+        % 
+        % %NOPAD
+        % if i < 17
+        %     ranking = Noppadinds;
+        %     posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        %     predictionselecs = testresponses(:, ranking(1:quantity(i)))*posfit;
+        %     errorsNoppad(i, j) = mean(rssq([predictionselecs-testposs].'));
+        % end
 
     end
 end
 
 %% Create plots
 
-load("AnalyticRegressionErrors.mat");
+load("SavedData/AnalyticRegressionErrors.mat");
 
 % Pseudoplots for legend
 plot(nan, nan, 'linewidth', 2, 'Color', 'r');

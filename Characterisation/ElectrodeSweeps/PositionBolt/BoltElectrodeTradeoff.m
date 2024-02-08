@@ -1,20 +1,24 @@
-load("betterdeltaresponses.mat"); % load data
+% LONG TIME TO RUN: PRECALCULATED DATA CAN BE LOADED IN BOTTOM SECTION
+
+load("SavedData/ExtractedPositions.mat"); 
+load("SavedData/betterdeltaresponses.mat"); % load data
 responses = deltaresponses;
 
 n = 1; % How many of the first PCA channels to average over
 repetitions = 20; % Repetitions for each quantity
 
-% quantityelec = [1:9 10:10:240]; % Locations to test
-% quantity = [quantityelec 250:50:480 500:100:3300 3358];
+quantityelec = [1:9 10:10:240]; % Locations to test
+quantity = [quantityelec 250:50:480 500:100:3300 3358];
 
 % errorselecs1 = zeros([length(quantityelec), repetitions]);
 % errorselecs2 = zeros([length(quantityelec), repetitions]);
 % errorspca = zeros([length(quantity), repetitions]);
 % errorsrandom = zeros([length(quantity), repetitions]);
+% errorsThomas = zeros([length(quantity), repetitions]);
 
-load("TradeoffPlot.mat"); % Continue from previous stopping point
+% load("SavedData/TradeoffPlot.mat"); % Continue from previous stopping point
 
-for i = 44:length(quantity)
+for i = 66:length(quantity)
     quantity(i) % Print current location
     for j = 1:repetitions
         % Seperate 10% test data
@@ -24,23 +28,29 @@ for i = 44:length(quantity)
         trainposs = positions(P(1:4500), :);
         testposs = positions(P(4501:end), :);
 
-        % PCA Calculate
-        [coeff,score,latent,tsquared,explained, mu] = pca(trainresponses);
-        [~,ranking] = sort(mean(coeff(:,1:n), 2), 'descend');
+        % % PCA Calculate
+        % [coeff,score,latent,tsquared,explained, mu] = pca(trainresponses);
+        % [~,ranking] = sort(mean(coeff(:,1:n), 2), 'descend');
+        % 
+        % posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        % 
+        % predictionspca = testresponses(:, ranking(1:quantity(i)))*posfit;
+        % % errorspca(i, j) = mean(abs(predictionspca-testposs)); % 1D error
+        % errorspca(i, j) = mean(rssq([predictionspca-testposs].')); % 2D error
+        % 
+        % % Random Calculate
+        % ranking = randperm(3358);
+        % 
+        % posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        % 
+        % predictionsrandom = testresponses(:, ranking(1:quantity(i)))*posfit;
+        % errorsrandom(i, j) = mean(rssq([predictionsrandom-testposs].'));
 
+        % Thomas Calculate
+        ranking = combs2;
         posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-    
-        predictionspca = testresponses(:, ranking(1:quantity(i)))*posfit;
-        % errorspca(i, j) = mean(abs(predictionspca-testposs)); % 1D error
-        errorspca(i, j) = mean(rssq([predictionspca-testposs].')); % 2D error
-
-        % Random Calculate
-        ranking = randperm(3358);
-
-        posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-    
         predictionsrandom = testresponses(:, ranking(1:quantity(i)))*posfit;
-        errorsrandom(i, j) = mean(rssq([predictionsrandom-testposs].'));
+        errorsThomas(i, j) = mean(rssq([predictionsrandom-testposs].'));
 
 
         % NOW REDUNDANT: SEE TradeoffAnalytic.m
@@ -63,34 +73,31 @@ for i = 44:length(quantity)
         %     errorselecs2(i, j) = mean(rssq([predictionselecs-testposs].'));
         % end
     end
-    save("TradeoffPlot.mat","errorselecs1", "errorselecs2", "errorspca", "errorsrandom");
+    save("SavedData/TradeoffPlot.mat","errorselecs1", "errorselecs2", "errorspca", "errorsrandom", "errorsThomas", "quantity", "quantityelec");
 end
 
-% Plot trade-off graph
-plot(quantity, mean(errorspca, 2));
-hold on
-plot(quantityelec, mean(errorselecs1, 2));
-plot(quantityelec, mean(errorselecs2, 2));
-plot(quantity, mean(errorsrandom, 2));
-legend({"PCA"; "RMSfirst Analytic"; "Phasefirst Analytics"; "Random"; "quantity"; "quantityelec"});
 
 %% 
 
-load("AnalyticRegressionErrors.mat");
-load("TradeoffPlot.mat");
+load("SavedData/AnalyticRegressionErrors.mat");
+load("SavedData/TradeoffPlot.mat");
+quantityelec = [1:9 10:10:240]; % Locations to test
+quantity = [quantityelec 250:50:480 500:100:3300 3358];
 
 % Pseudoplots for legend
 plot(nan, nan, 'linewidth', 2, 'Color', 'b');
 hold on
 plot(nan, nan, 'linewidth', 2, 'Color', 'c');
 plot(nan, nan, 'linewidth', 2, 'Color', 'k');
+plot(nan, nan, 'linewidth', 2, 'Color', 'g');
 
 % Actual plots
 addplot(errorspca, quantity, 'b');
 addplot(errorsrandom, quantity, 'k');
 addplot(errorsallwithphase, 1:240, 'c');
+addplot(errorsThomas, quantity, 'g');
 
-legend({"PCA Ranking"; "Analytic Ranking"; "Random Ranking"});
+legend({"PCA Ranking"; "Analytic Ranking"; "Random Ranking"; "Thomas Ranking"});
 legend boxoff
 ylabel("Localization Error (mm)");
 set(gcf, "Position", [449   338   795   420]);
