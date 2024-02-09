@@ -1,6 +1,35 @@
+%% Visualise fields for electrode combination 1598
 calculatefields(1, 30, 2, 1);
 calculatefields(1000, -950, 2, 3);
 set(gcf, 'color', 'w', 'position', [385   211   684   586]);
+
+%% Corresponding responses plot
+% figure();
+% data = steelbolts.rms10k(); plot(smooth(data(:, 1598)));
+% hold on
+% data = melting.rms10k(); plot(smooth(data(:, 1598)));
+% data = damages.rms10k(); plot(smooth(data(:, 1598)));
+% data = pressrobot.rms10k(); plot(smooth(data(:, 1598)));
+% data = touchsingle.rms10k(); plot(smooth(data(:, 1598)));
+% data = plasticcaps.rms10k(); plot(smooth(data(:, 1598)));
+
+bar([Aresponse([steelbolts melting damages pressrobot touchsingle plasticcaps]); ABresponse(touch)]);
+
+function responsemags = Aresponse(modalities)
+    responsemags = zeros([length(modalities), 1]);
+    for i = 1:length(modalities)
+        data = modalities(i).rms10k();
+        responsemags(i) = mean(data(27:33, 1598)) - mean(data(2:12, 1598));
+    end
+end
+
+function responsemags = ABresponse(modalities)
+    responsemags = zeros([length(modalities), 1]);
+    for i = 1:length(modalities)
+        data = modalities(i).rms10k();
+        responsemags(i) = mean(data(148:154, 1598)) - mean(data(128:135, 1598));
+    end
+end
 
 function calculatefields(factor1, factor2, n, m)
     % 2D Model
@@ -12,6 +41,7 @@ function calculatefields(factor1, factor2, n, m)
     % Add a circular object
     img_v = img_1;
     select_fcn = inline('(x+0.3).^2+(y+0.3).^2<0.2^2','x','y','z');
+    % select_fcn = inline('(x).^2+(10*y+3).^2<0.5^2','x','y','z');
     img_v.elem_data = factor1 + factor2*elem_select(img_v.fwd_model, select_fcn);
     
     % Visualise FEM
@@ -67,8 +97,13 @@ function calculatefields(factor1, factor2, n, m)
     [x, y] = pol2cart(5*pi/4, 1);
     scatter(x, y, 20, 'r', 'filled');
 
-    [x, y] = pol2cart(4*pi/4, 1);
+    [x, y] = pol2cart(3*pi/4, 1);
     scatter(x, y, 20, 'r', 'filled');
+
+    for i = 1:8
+        [x, y] = pol2cart(i*pi/4, 1);
+        scatter(x, y, 20, 'r', 'filled');
+    end
     
     hold off; axis off; axis equal;
 

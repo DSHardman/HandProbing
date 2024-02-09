@@ -15,10 +15,11 @@ quantity = [quantityelec 250:50:480 500:100:3300 3358];
 % errorspca = zeros([length(quantity), repetitions]);
 % errorsrandom = zeros([length(quantity), repetitions]);
 % errorsThomas = zeros([length(quantity), repetitions]);
+errorsThomas2 = zeros([length(quantity), repetitions]);
 
 % load("SavedData/TradeoffPlot.mat"); % Continue from previous stopping point
 
-for i = 66:length(quantity)
+for i = 1:length(quantity)
     quantity(i) % Print current location
     for j = 1:repetitions
         % Seperate 10% test data
@@ -47,10 +48,16 @@ for i = 66:length(quantity)
         % errorsrandom(i, j) = mean(rssq([predictionsrandom-testposs].'));
 
         % Thomas Calculate
-        ranking = combs2;
-        posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
-        predictionsrandom = testresponses(:, ranking(1:quantity(i)))*posfit;
-        errorsThomas(i, j) = mean(rssq([predictionsrandom-testposs].'));
+        % ranking = combs2;
+        % posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+        % predictionsrandom = testresponses(:, ranking(1:quantity(i)))*posfit;
+        % errorsThomas(i, j) = mean(rssq([predictionsrandom-testposs].'));
+        if quantity(i) <= 2060
+            ranking = comb3;
+            posfit = trainresponses(:, ranking(1:quantity(i)))\trainposs;
+            predictionsrandom = testresponses(:, ranking(1:quantity(i)))*posfit;
+            errorsThomas2(i, j) = mean(rssq([predictionsrandom-testposs].'));
+        end
 
 
         % NOW REDUNDANT: SEE TradeoffAnalytic.m
@@ -73,9 +80,8 @@ for i = 66:length(quantity)
         %     errorselecs2(i, j) = mean(rssq([predictionselecs-testposs].'));
         % end
     end
-    save("SavedData/TradeoffPlot.mat","errorselecs1", "errorselecs2", "errorspca", "errorsrandom", "errorsThomas", "quantity", "quantityelec");
+    save("SavedData/TradeoffPlot.mat","errorselecs1", "errorselecs2", "errorspca", "errorsrandom", "errorsThomas", "errorsThomas2", "quantity", "quantityelec");
 end
-
 
 %% 
 
@@ -90,17 +96,20 @@ hold on
 plot(nan, nan, 'linewidth', 2, 'Color', 'c');
 plot(nan, nan, 'linewidth', 2, 'Color', 'k');
 plot(nan, nan, 'linewidth', 2, 'Color', 'g');
+plot(nan, nan, 'linewidth', 2, 'Color', 'r');
 
 % Actual plots
 addplot(errorspca, quantity, 'b');
 addplot(errorsrandom, quantity, 'k');
 addplot(errorsallwithphase, 1:240, 'c');
 addplot(errorsThomas, quantity, 'g');
+addplot(errorsThomas2, quantity, 'r');
 
-legend({"PCA Ranking"; "Analytic Ranking"; "Random Ranking"; "Thomas Ranking"});
+legend({"PCA Ranking"; "Analytic Ranking"; "Random Ranking"; "combs2"; "comb3"});
 legend boxoff
 ylabel("Localization Error (mm)");
 set(gcf, "Position", [449   338   795   420]);
+xlim([0 1000]);
 
 % xlim([0 1000]); %See most interesting parts of the plot
 

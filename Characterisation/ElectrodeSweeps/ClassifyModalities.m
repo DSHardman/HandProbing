@@ -11,11 +11,16 @@
 % save("ClassifyModalitiesData.mat", "a_touch", "a_human", "a_robot", "a_steel");
 
 % Compare with analytic electrode configurations
-pca_acc = modalitypredict(pressrobot);
-opop_acc = modalitypredict(pressrobot, oppoppinds);
-opad_acc = modalitypredict(pressrobot, oppadinds);
-adad_acc = modalitypredict(pressrobot, adadinds);
-save("ClassifyModalitiesRobotData.mat", "pca_acc", "opop_acc", "opad_acc", "adad_acc");
+% pca_acc = modalitypredict(pressrobot);
+% opop_acc = modalitypredict(pressrobot, oppoppinds);
+% opad_acc = modalitypredict(pressrobot, oppadinds);
+% adad_acc = modalitypredict(pressrobot, adadinds);
+% save("ClassifyModalitiesRobotData.mat", "pca_acc", "opop_acc", "opad_acc", "adad_acc");
+
+% Compare different morphologies
+% a_touch_bc = modalitypredict(bctouch);
+a_touch_sc = modalitypredict(sctouch);
+% save("ClassifyModalitiesData.mat", "a_touch", "a_human", "a_robot", "a_steel");
 
 %% Plot
 % Plot precalculated comparison between modalities
@@ -31,18 +36,23 @@ save("ClassifyModalitiesRobotData.mat", "pca_acc", "opop_acc", "opad_acc", "adad
 % addplot(1-a_robot, 1:50, 'g');
 % addplot(1-a_steel, 1:50, 'k');
 % ylabel("Classification Error (%)");
-% set(gcf, 'position', [415   331   704   420]);
+% set(gcf, 'position', [415   331   704   420], 'color', 'w'); 
 % legend({"Human Touch"; "Human Press"; "Robot Press"; "Steel Bolts"});
 % legend boxoff
 % ylim([0 35]);
 
 % Plot precalculated comparison between RobotPress electrode configurations
-load("ClassifyModalitiesRobotData.mat");
-addplot(pca_acc, 1:50, 'b');
-hold on
-addplot(opop_acc, 1:50, 'r');
-addplot(opad_acc, 1:50, 'g');
-addplot(adad_acc, 1:50, 'k');
+% load("ClassifyModalitiesRobotData.mat");
+% addplot(pca_acc, 1:50, 'b');
+% hold on
+% addplot(opop_acc, 1:50, 'r');
+% addplot(opad_acc, 1:50, 'g');
+% addplot(adad_acc, 1:50, 'k');
+
+% addplot(1-a_touch_H, 1:50, 'g');
+% hold on
+% addplot(1-a_touch_sh, 1:50, 'b');
+% addplot(1-a_touch_sc, 1:50, 'b');
 
 function accuracies = modalitypredict(modality, ranking)
     % Ranking input is a precalculated vector or leave blank for pca
