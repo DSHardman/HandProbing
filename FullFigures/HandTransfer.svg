@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="688.50946mm"
+   height="789.87848mm"
+   viewBox="0 0 688.50946 789.87848"
    version="1.1"
    id="svg2362"
    inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
@@ -25,50 +25,51 @@
      inkscape:document-units="mm"
      showgrid="false"
      showborder="false"
-     inkscape:zoom="0.17171191"
-     inkscape:cx="-966.73551"
-     inkscape:cy="573.63523"
-     inkscape:window-width="1920"
-     inkscape:window-height="1111"
-     inkscape:window-x="-9"
+     inkscape:zoom="0.24283731"
+     inkscape:cx="893.60238"
+     inkscape:cy="1715.1401"
+     inkscape:window-width="2400"
+     inkscape:window-height="1261"
+     inkscape:window-x="2391"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
      id="defs2359">
     <marker
-       style="overflow:visible;"
+       style="overflow:visible"
        id="Arrow2Mend"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow2Mend"
        inkscape:isstock="true">
       <path
-         transform="scale(0.6) rotate(180) translate(0,0)"
-         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         transform="scale(-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:0.625;stroke-linejoin:round"
          id="path916" />
     </marker>
     <marker
        style="overflow:visible"
        id="Arrow1Lstart"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow1Lstart"
        inkscape:isstock="true">
       <path
-         transform="scale(0.8) translate(12.5,0)"
-         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path889" />
     </marker>
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(330.62157,31.013763)">
     <image
        width="283.70044"
        height="86.38829"
@@ -150,8 +151,8 @@
        d="M -304.4646,368.26459 H 357.74596"
        id="path76014-7-5" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 58.745135,132.51362 0,235.85212"
+       style="fill:none;stroke:#000000;stroke-width:0.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 58.745135,132.51362 V 368.36574"
        id="path8121"
        sodipodi:nodetypes="cc" />
     <text
@@ -221,30 +222,8 @@
          x="-9.1624966"
          y="710.03607"
          id="tspan27411-4-8-7-7-8-8-6-9">Predict stimuli</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:11.1433px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.278583"
-       x="-42.816277"
-       y="353.97452"
-       id="text31973-3-5-4-5-5-3-9-9-6"><tspan
-         sodipodi:role="line"
-         style="font-weight:bold;fill:#d90000;fill-opacity:1;stroke-width:0.278583"
-         x="-42.816277"
-         y="353.97452"
-         id="tspan27411-4-8-7-7-0">Quantify ESB</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:11.1433px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.278583"
-       x="258.87534"
-       y="353.97452"
-       id="text31973-3-5-4-5-5-3-9-9-6-2"><tspan
-         sodipodi:role="line"
-         style="font-weight:bold;fill:#d90000;fill-opacity:1;stroke-width:0.278583"
-         x="258.87534"
-         y="353.97452"
-         id="tspan27411-4-8-7-7-0-6">Quantify ESB</tspan></text>
     <path
-       style="fill:none;stroke:#d90000;stroke-width:1.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;stroke:#d90000;stroke-width:1.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m -91.522178,514.26747 30.507394,34.8656"
        id="path9790" />
     <path
@@ -257,8 +236,31 @@
        id="path9790-9-8" />
     <path
        style="fill:none;stroke:#d90000;stroke-width:2.765;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
-       d="m 148.17877,704.87259 38.13424,0.0661 0.33046,-210.93267 -181.1957212,-1.52952"
+       d="m 148.17877,704.87259 38.13424,0.0661 0.33046,-210.93267 L 5.4477488,492.4765"
        id="path887"
        sodipodi:nodetypes="cccc" />
+    <rect
+       style="fill:#e40000;fill-opacity:0.703629;stroke:#ff0000;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5257"
+       width="328.49927"
+       height="47.395416"
+       x="-112.71162"
+       y="353.05252" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:14.3784px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.35946"
+       x="-97.529984"
+       y="370.9238"
+       id="text31973-3-5-4-5-5-3-9-2-9"><tspan
+         sodipodi:role="line"
+         style="font-weight:bold;fill:#000000;fill-opacity:1;stroke-width:0.35946"
+         x="-97.529984"
+         y="370.9238"
+         id="tspan27411-4-8-7-0-9">1.7 Million channels are possible:</tspan><tspan
+         sodipodi:role="line"
+         style="font-weight:bold;fill:#000000;fill-opacity:1;stroke-width:0.35946"
+         x="-97.529984"
+         y="388.89679"
+         id="tspan4224">which ones should we be monitoring?</tspan></text>
   </g>
 </svg>
