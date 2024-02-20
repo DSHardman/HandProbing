@@ -680,12 +680,12 @@ uint32_t read_signal_at_freq(int freq)
 
     // if (rms)
     //     *rms = (double)rms_10bit * 2.2 / 1024;
-    Serial.write((rms_10bit)&0x1F);
-    Serial.write((rms_10bit)>>8);                          
+    Serial.write((rms_10bit*100)&0x1F);
+    Serial.write((rms_10bit*100)>>8);                          
     // if (phase)
     //     *phase = (sample_rate * phase_offset_cycles / 1000000) * freq * 2*PI; 
-    Serial.write(int(sample_rate * phase_offset_cycles)&0x1F);
-    Serial.write(int(sample_rate * phase_offset_cycles)>>8);
+    Serial.write(int(sample_rate * phase_offset_cycles*500)&0x1F);
+    Serial.write(int(sample_rate * phase_offset_cycles*500)>>8);
 
 
     return (time2 - time1);
@@ -926,6 +926,8 @@ void read_all_at_freq(int freq, uint8_t num_elec) // added by david 11/12/23
 void setup() 
 {
     Serial.begin(230400);
+
+    delay(1000*30); // Wait 30s before beginning
     Serial.write(0xFF);
     Serial.write(0xFF);
     Serial.write(0xFF);
@@ -1064,7 +1066,6 @@ void loop()
   uint16_t i;
 
   if (millis() - t0 > 350) {
-
   AD5930_Set_Start_Freq(100000);
   calibrate_samples_at_freq(100000);
   read_all_at_freq(100000, NUM_ELECTRODES);
@@ -1078,6 +1079,6 @@ void loop()
   Serial.write(0xFF);
 
   t0 = millis();
-
+  delay(1000*60*4); // Record data roughly every 5 minutes
   }
 }
