@@ -1,9 +1,3 @@
-for i = 1:50
-    plotelectrodes(i);
-    pause();
-    clf
-end
-
 function plotelectrodes(ranking)
     load("electrodes.mat");
     electrodes = electrodes(ranking, :);
