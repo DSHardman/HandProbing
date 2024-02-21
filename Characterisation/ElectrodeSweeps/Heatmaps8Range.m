@@ -1,0 +1,39 @@
+function Heatmaps8Range(recordingobject, range1, range2)
+    subplot(2,3,1);
+    data = recordingobject.rms10k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    title("10kHz RMS");
+    subplot(2,3,2);
+    data = recordingobject.rms50k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    title("50kHz RMS");
+    subplot(2,3,3);
+    data = recordingobject.rms100k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    title("100kHz RMS");
+    subplot(2,3,4);
+    data = recordingobject.phase10k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    title("10kHz Phase");
+    subplot(2,3,5);
+    data = recordingobject.phase50k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    title("50kHz Phase");
+    subplot(2,3,6);
+    data = recordingobject.phase100k;
+    heatmap(normalize(data(range1:range2, :), "range", [0 1]).',...
+        "colormap", gray, 'XDisplayLabels',NaN*ones(size(data(range1:range2, :), 1),1),...
+        'YDisplayLabels',NaN*ones(size(recordingobject.rms10k, 2),1)); grid off; colorbar off
+    set(gcf, 'Position', [193 334 1124 418], 'Color', 'w');
+    title("100kHz Phase");
+end

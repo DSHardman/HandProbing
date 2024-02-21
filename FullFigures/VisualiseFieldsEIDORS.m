@@ -1,6 +1,7 @@
 %% Visualise fields for electrode combination 1598
-% calculatefields(1, 30, 2, 1);
-% calculatefields(1000, -950, 2, 3);
+% calculatefields(1, 30, 3, 1);
+% calculatefields(1000, -950, 3, 3);
+% calculatefields(1000, 0, 3, 5);
 % set(gcf, 'color', 'w', 'position', [385   211   684   586]);
 
 %% Part 2 of figure: inducing different fields from the same conditions
@@ -121,8 +122,8 @@ function calculatefields(factor1, factor2, n, m, injections)
         end
     end
 
-    hh=streamline(q.xp,q.yp, q.xc, q.yc,sx,sy); set(hh,'Linewidth',1, 'color', 'k');
-    hh=streamline(q.xp,q.yp,-q.xc,-q.yc,sx,sy); set(hh,'Linewidth',1, 'color', 'k');
+    hh=streamline(q.xp,q.yp, q.xc, q.yc,sx,sy); set(hh,'Linewidth',1, 'color', [0.5 0.5 0.5]);
+    hh=streamline(q.xp,q.yp,-q.xc,-q.yc,sx,sy); set(hh,'Linewidth',1, 'color', [0.5 0.5 0.5]);
     
     pic = shape_library('get','adult_male','pic');
     [x y] = meshgrid( linspace(pic.X(1), pic.X(2),size(imgs,1)), ...
