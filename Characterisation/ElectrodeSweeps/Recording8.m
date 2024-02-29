@@ -76,7 +76,7 @@ classdef Recording8
         end
 
         function plotfingerprint(obj)
-            heatmap(reshape([obj.fingerprint; NaN], [30, 56]).',...% "colormap", gray,...
+            heatmap(reshape([abs(obj.fingerprint); NaN], [30, 56]).',...% "colormap", gray,...
         'XDisplayLabels',NaN*ones(30,1), 'YDisplayLabels',NaN*ones(56,1));
         end
     end

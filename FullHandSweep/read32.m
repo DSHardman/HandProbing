@@ -5,6 +5,7 @@ s = serialport("COM17",230400, "Timeout", 600);
 n = 600;
 
 alldata = zeros(n, 2*863040+4);
+
 times(n) = datetime();
 
 for i = 1:n
@@ -15,7 +16,7 @@ for i = 1:n
     toc
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
-    save("conditions.mat", "alldata", "times");
+    % save("conditions.mat", "alldata", "times");
 end
 
 % data = read(s, (86300), "int16");

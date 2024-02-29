@@ -10,3 +10,5 @@
 Media/*
 /Characterisation/ElectrodeSweeps/Media/
 *.mp4
+*Weekend.mat
+*Hand32Environment.mat

@@ -64,6 +64,7 @@ colors = (1/255)*[141 199 129;
 
 figure();
 for i = 1:length(s)
+    colors(i,:) = colors(6,:);
     subplot(1,length(s), i);
     s{1,i}.plotfingerprint();
     grid off
