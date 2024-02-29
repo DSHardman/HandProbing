@@ -83,24 +83,23 @@ end
 [~, combinedranking] = sort(combinedscore, "ascend");
 
 
-%% Visualise
+%% Visualise top 20 rankings
+load("combinedranking.mat");
+figure();
+for i = 1:20
+    subplot(4,5,i);
+    plotelectrodes32(combinedranking(i));
+end
+
 figure();
 viscircles([0 0], 1, 'color', 'k');
 hold on
 for i = 1:20
-    % subplot(4,5,i);
-    plotelectrodes32(combinedranking(i));
+    plotelectrodes32fill(combinedranking(i));
 end
 
-%% Copy top combinations to clipboard
-% data = "";
-% for i = 1:10
-%     data = data + string(combinedranking(i)) + ", ";
-% end
-% data = char(data);
-% data = data(1:end-2); % Remove final comma
-% 
-% clipboard('copy', string(data));
+%% Copy top combinations to clipboard for arduino
+% Note arduino code subtracts 1 to account for different indexing system
 
 data = "";
 for i = 1:2784
