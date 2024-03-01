@@ -18,8 +18,10 @@
 % save("ClassifyModalitiesRobotData.mat", "pca_acc", "opop_acc", "opad_acc", "adad_acc");
 
 % Compare different morphologies
-% a_touch_bc = modalitypredict(bctouch);
-a_touch_sc = modalitypredict(sctouch);
+% a_touch_H = modalitypredict(Htouch);
+% a_press_H = modalitypredict(Hpresshuman);
+a_touch_bc = modalitypredict(bctouch);
+% a_touch_sc = modalitypredict(sctouch);
 % save("ClassifyModalitiesData.mat", "a_touch", "a_human", "a_robot", "a_steel");
 
 %% Plot
@@ -35,11 +37,8 @@ a_touch_sc = modalitypredict(sctouch);
 % addplot(1-a_human, 1:50, 'r');
 % addplot(1-a_robot, 1:50, 'g');
 % addplot(1-a_steel, 1:50, 'k');
-% ylabel("Classification Error (%)");
-% set(gcf, 'position', [415   331   704   420], 'color', 'w'); 
 % legend({"Human Touch"; "Human Press"; "Robot Press"; "Steel Bolts"});
 % legend boxoff
-% ylim([0 35]);
 
 % Plot precalculated comparison between RobotPress electrode configurations
 % load("ClassifyModalitiesRobotData.mat");
@@ -48,11 +47,25 @@ a_touch_sc = modalitypredict(sctouch);
 % addplot(opop_acc, 1:50, 'r');
 % addplot(opad_acc, 1:50, 'g');
 % addplot(adad_acc, 1:50, 'k');
-
-% addplot(1-a_touch_H, 1:50, 'g');
+% 
+% plot(nan, nan, "linewidth", 2, "color", "m");
 % hold on
-% addplot(1-a_touch_sh, 1:50, 'b');
+% plot(nan, nan, "linewidth", 2, "color", "r");
+% addplot(1-a_press_H, 1:50, 'm');
+% % addplot(1-a_touch_H, 1:50, 'm');
+% % hold on
+% % addplot(1-a_touch, 1:50, 'b');
+% addplot(1-a_human, 1:50, 'r');
+% % hold on
+% % addplot(1-a_touch_sh, 1:50, 'b');
+% % addplot(1-a_touch_sc, 1:50, 'b');
 % addplot(1-a_touch_sc, 1:50, 'b');
+% legend({"Press Hemisphere"; "Press Membrane"});
+% legend boxoff
+
+ylabel("Classification Error (%)");
+set(gcf, 'position', [415   331   704   420], 'color', 'w'); 
+ylim([0 35]);
 
 function accuracies = modalitypredict(modality, ranking)
     % Ranking input is a precalculated vector or leave blank for pca

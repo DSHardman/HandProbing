@@ -51,5 +51,37 @@ classdef HandCompare
         function phase = phaseadad(obj)
             phase = obj.alldata(:, (2784+960+896)*2+2:2:(2784+960+896+928)*2);
         end
+
+        function response = selectedresponses(obj)
+            response = zeros([99, 2784*2]);
+            for i = 1:99
+                response(i, :) = mean(obj.alldata((i-1)*10+6:(i-1)*10+9, 1:2784*2)) -...
+                    mean(obj.alldata((i-1)*10+1:(i-1)*10+4, 1:2784*2));
+            end
+        end
+
+        function response = opopresponses(obj)
+            response = zeros([99, 960*2]);
+            for i = 1:99
+                response(i, :) = mean(obj.alldata((i-1)*10+6:(i-1)*10+9, 2784*2+1:(2784+960)*2)) -...
+                    mean(obj.alldata((i-1)*10+1:(i-1)*10+4, 2784*2+1:(2784+960)*2));
+            end
+        end
+
+        function response = opadresponses(obj)
+            response = zeros([99, 896*2]);
+            for i = 1:99
+                response(i, :) = mean(obj.alldata((i-1)*10+6:(i-1)*10+9, (2784+960)*2+1:(2784+960+896)*2)) -...
+                    mean(obj.alldata((i-1)*10+1:(i-1)*10+4, (2784+960)*2+1:(2784+960+896)*2));
+            end
+        end
+
+        function response = adadresponses(obj)
+            response = zeros([99, 928*2]);
+            for i = 1:99
+                response(i, :) = mean(obj.alldata((i-1)*10+6:(i-1)*10+9, (2784+960+896)*2+1:(2784+960+896+928)*2)) -...
+                    mean(obj.alldata((i-1)*10+1:(i-1)*10+4, (2784+960+896)*2+1:(2784+960+896+928)*2));
+            end
+        end
     end
 end

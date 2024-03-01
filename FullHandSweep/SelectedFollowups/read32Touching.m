@@ -1,4 +1,4 @@
-% lines = readlines("../handoutline.txt");
+% lines = readlines("../../handoutline.txt");
 % 
 % positions = zeros([180 2]);
 % 
