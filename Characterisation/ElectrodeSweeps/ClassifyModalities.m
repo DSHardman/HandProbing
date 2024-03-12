@@ -20,9 +20,21 @@
 % Compare different morphologies
 % a_touch_H = modalitypredict(Htouch);
 % a_press_H = modalitypredict(Hpresshuman);
+% a_glove_H = modalitypredict(Hpressglove);
+% a_touch_bc = modalitypredict(bctouch);
+a_touch_sc = modalitypredict(sctouch);
+a_glove_sc = modalitypredict(scglovepress);
+
 a_touch_bc = modalitypredict(bctouch);
-% a_touch_sc = modalitypredict(sctouch);
-% save("ClassifyModalitiesData.mat", "a_touch", "a_human", "a_robot", "a_steel");
+a_glove_bc = modalitypredict(bcglovepress);
+
+a_touch_sh = modalitypredict(shtouch);
+a_glove_sh = modalitypredict(shglovepress);
+
+a_touch_bh = modalitypredict(bhtouch);
+a_glove_bh = modalitypredict(bhglovepress);
+
+save("ClassifyChannels.mat", "a_touch_sc", "a_glove_sc", "a_touch_bc", "a_glove_bc", "a_touch_sh", "a_glove_sh", "a_touch_bh", "a_glove_bh");
 
 %% Plot
 % Plot precalculated comparison between modalities
@@ -62,6 +74,43 @@ a_touch_bc = modalitypredict(bctouch);
 % addplot(1-a_touch_sc, 1:50, 'b');
 % legend({"Press Hemisphere"; "Press Membrane"});
 % legend boxoff
+
+% plot(nan, nan, "linewidth", 2, "color", "r");
+% hold on
+% plot(nan, nan, "linewidth", 2, "color", "b");
+% plot(nan, nan, "linewidth", 2, "color", "g");
+% plot(nan, nan, "linewidth", 2, "color", "m");
+% addplot(1-a_touch_sc, 1:50, 'r');
+% addplot(1-a_touch_bc, 1:50, 'b');
+% addplot(1-a_touch_sh, 1:50, 'g');
+% addplot(1-a_touch_bh, 1:50, 'm');
+% 
+% legend({"Salt Membrane Touch"; "Baking Membrane Touch"; "Salt Hemisphere Touch"; "Baking Hemisphere Touch"});
+% legend boxoff
+
+% plot(nan, nan, "linewidth", 2, "color", "r");
+% hold on
+% plot(nan, nan, "linewidth", 2, "color", "b");
+% plot(nan, nan, "linewidth", 2, "color", "g");
+% plot(nan, nan, "linewidth", 2, "color", "m");
+% addplot(1-a_glove_sc, 1:50, 'r');
+% addplot(1-a_glove_bc, 1:50, 'b');
+% addplot(1-a_glove_sh, 1:50, 'g');
+% addplot(1-a_glove_bh, 1:50, 'm');
+% 
+% legend({"Salt Membrane Glove"; "Baking Membrane Glove"; "Salt Hemisphere Glove"; "Baking Hemisphere Glove"});
+% legend boxoff
+
+
+plot(nan, nan, "linewidth", 2, "color", "b");
+hold on
+plot(nan, nan, "linewidth", 2, "color", "r");
+plot(nan, nan, "linewidth", 2, "color", "g");
+addplot(1-a_touch_H, 1:50, 'r');
+addplot(1-a_press_H, 1:50, 'g');
+addplot(1-a_glove_H, 1:50, 'b');
+legend({"Touch Hemisphere"; "Press Hemisphere"; "Glove Hemisphere"});
+legend boxoff
 
 ylabel("Classification Error (%)");
 set(gcf, 'position', [415   331   704   420], 'color', 'w'); 
