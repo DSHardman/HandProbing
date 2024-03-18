@@ -1,5 +1,5 @@
-s={touch, melting};
-legendlabel = {"none"; "plasticcaps"; "melting"};
+s={steelbolts, touch};
+legendlabel = {"none"; "Steel"; "Touch"};
 
 
 % if the last argument here is 1, PCA uses only first entry. Leave blank

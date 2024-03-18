@@ -1056,7 +1056,7 @@ void loop()
 {   
   uint16_t i;
 
-  if (millis() - t0 > 5*60000) {
+  if (millis() - t0 > 180000) {
 
   t0 = millis();
   AD5930_Set_Start_Freq(10000);
@@ -1072,5 +1072,6 @@ void loop()
     Serial.print(signal_phase[i], 4);
     Serial.print(", ");
   }
+  Serial.print("\n");
   }
 }
