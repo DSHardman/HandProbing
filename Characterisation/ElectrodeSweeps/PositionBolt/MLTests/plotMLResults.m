@@ -17,7 +17,7 @@ legend boxoff;
 set(gcf, 'color', 'w', 'Position', [488   444   560   314]);
 
 %% Scatter plot
-subplot(1,3,1);
+subplot(2,2,1);
 load("Top20Trained.mat");
 scatter(testT(1,:), testT(2,:), 50, errors20, 'filled');
 xlim([-0.05 0.05]);
@@ -27,7 +27,7 @@ axis off
 colormap cool
 colorbar; clim([0 0.035]);
 
-subplot(1,3,2);
+subplot(2,2,2);
 load("Top20PCA.mat");
 scatter(testT(1,:), testT(2,:), 50, errors20pca, 'filled');
 xlim([-0.05 0.05]);
@@ -37,7 +37,7 @@ axis off
 colormap cool
 colorbar; clim([0 0.035]);
 
-subplot(1,3,3);
+subplot(2,2,3);
 load("Top20Analytic.mat");
 scatter(testT(1,:), testT(2,:), 50, errors20analytic, 'filled');
 xlim([-0.05 0.05]);
@@ -47,4 +47,14 @@ axis off
 colormap cool
 colorbar; clim([0 0.035]);
 
-set(gcf, 'position', [42         431        1490         355]);
+subplot(2,2,4);
+load("Random20Trained.mat");
+scatter(testT(1,:), testT(2,:), 50, randomerrors, 'filled');
+xlim([-0.05 0.05]);
+ylim([-0.05 0.05]);
+axis square
+axis off
+colormap cool
+colorbar; clim([0 0.035]);
+
+set(gcf, 'position', [335          73        1014         807]);

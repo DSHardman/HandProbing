@@ -77,8 +77,11 @@ end
 
 %% Seperate rankings to determine information-rich channels
 
-combinedscore = zeros([(size(alldata,2)-4)/2, 1]);
-for i = 1:size(alldata/2, 2)
+combinedscore = zeros([size(ranking,1)/2, 1]);
+for i = 1:size(ranking,1)/2
+    if mod(i,10000)==0
+        i
+    end
     combinedscore(i) = find(ranking==2*i) + find(ranking==2*i-1);
 end
 

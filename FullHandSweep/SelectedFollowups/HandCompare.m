@@ -28,6 +28,14 @@ classdef HandCompare
             phase = obj.alldata(:, 2:2:2784*2);
         end
 
+        function rms = rmsanalytic(obj)
+            rms = obj.alldata(:, 2784*2+1:2:end-4);
+        end
+
+        function phase = phaseanalytic(obj)
+            phase = obj.alldata(:, 2784*2+2:2:end-4);
+        end
+
         function rms = rmsopop(obj)
             rms = obj.alldata(:, 2784*2+1:2:(2784+960)*2);
         end
