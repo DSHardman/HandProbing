@@ -2,7 +2,7 @@ load("electrodes.mat");
 load("PositionBolt/MLTests/rankings.mat");
 electrodes = [electrodes; electrodes];
 n = 150; % How many of the best ranked to look at?
-
+\
 
 %% Gap Distributions
 figure();

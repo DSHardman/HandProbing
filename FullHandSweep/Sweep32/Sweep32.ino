@@ -17,7 +17,7 @@
 #define AD5930_CLK_FREQ    50000000
 #define TEST_FREQ          100000
 #define NUM_PERIODS        1        // Number of signal periods to measure
-#define ADC_AVG            5        // Number of ADC samples to average for each analog reading
+#define ADC_AVG            1        // Number of ADC samples to average for each analog reading
 
 // AD5270 commands
 #define CMD_WR_RDAC        0x01
@@ -683,12 +683,12 @@ uint32_t read_signal_at_freq(int freq, bool printfigs)
     //     *rms = (double)rms_10bit * 2.2 / 1024;
     // Serial.write((rms_10bit*100)&0x1F);
     // Serial.write((rms_10bit*100)>>8);
-    Serial.write((rms_10bit*10)&0x1F); // test 22/02
-    Serial.write((rms_10bit*10)>>8); // test 22/02           
+    Serial.write((rms_10bit/10)>>8); // changed 28/02 MSB FIRST
+    Serial.write((rms_10bit/10)&0xFF); // changed 28/02          
     // if (phase)
     //     *phase = (sample_rate * phase_offset_cycles / 1000000) * freq * 2*PI; 
-    Serial.write(int(sample_rate * phase_offset_cycles*500)&0x1F);
-    Serial.write(int(sample_rate * phase_offset_cycles*500)>>8);
+    Serial.write(int(sample_rate * phase_offset_cycles)>>8);  // changed 28/02 MSB FIRST
+    Serial.write(int(sample_rate * phase_offset_cycles)&0xFF); // changed 28/02
 
 
     return (time2 - time1);
@@ -1073,7 +1073,7 @@ void loop()
 {   
   uint16_t i;
 
-  if (millis() - t0 > 60000) {
+  if (millis() - t0 > 350) {
   t0 = millis();
   read_all_at_freq(100000, NUM_ELECTRODES);
   Serial.write(0xFF);
@@ -1084,6 +1084,6 @@ void loop()
   Serial.write(0xFF);
   Serial.write(0xFF);
   Serial.write(0xFF);
-  delay(1000*60*4); // Record data roughly every 5 minutes
+  // delay(1000*60*4); // Record data roughly every 5 minutes
   }
 }

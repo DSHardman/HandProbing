@@ -1,8 +1,8 @@
-s = serialport("COM17",230400, "Timeout", 600);
+s = serialport("COM18",230400, "Timeout", 600);
 % configureCallback(s, "byte", 50000, @testfunc);
 % disp(datestr(datetime("now"),'HH:MM:SS:FFF'));
 
-n = 600;
+n = 60;
 
 alldata = zeros(n, 2*863040+4);
 

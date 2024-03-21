@@ -1,18 +1,19 @@
 load("Results.mat");
 
-colors = (1/255)*[27 158 119; 217 95 2; 117 112 179];
+colors = (1/255)*[27 158 119; 217 95 2; 117 112 179; 231 41 138];
 
 plot(1000*errors(1:150, 1), 'linewidth', 2, 'color', colors(1, :));
 hold on
 plot(1000*errors(1:150, 2), 'linewidth', 2, 'color', colors(2, :));
 plot(1000*errors(1:150, 3), 'linewidth', 2, 'color', colors(3, :));
+plot(1000*errors(1:150, 4), 'linewidth', 2, 'color', colors(4, :));
 
 xlabel("Number of Combinations");
 ylabel("Error (mm)");
 
 set(gca, 'linewidth', 2, 'fontsize', 15);
 box off
-legend({"Analytic"; "PCA"; "F-Test"});
+legend({"Analytic"; "PCA"; "F-Test"; "Environment"});
 legend boxoff;
 set(gcf, 'color', 'w', 'Position', [488   444   560   314]);
 

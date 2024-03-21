@@ -1,27 +1,27 @@
-% lines = readlines("../../handoutline.txt");
-% 
-% positions = zeros([180 2]);
-% 
-% for i = 1:length(lines)
-%     line = lines(i);
-%     position = str2double(split(line, "  "));
-%     positions(i, :) = [position(end-1) position(end)];
-% end
-% 
-% 
-% % Generate random points within hand
-% targetpositions = zeros([100, 2]);
-% 
-% n = 0;
-% while n < 100
-%     x = rand()*(max(positions(:,1))-min(positions(:, 1))) + min(positions(:, 1));
-%     y = rand()*(max(positions(:,2))-min(positions(:, 2))) + min(positions(:, 2));
-% 
-%     if inpolygon(x,y,positions(:,1),positions(:,2))
-%         n = n + 1;
-%         targetpositions(n, :) = [x y];
-%     end
-% end
+lines = readlines("../../handoutline.txt");
+
+positions = zeros([180 2]);
+
+for i = 1:length(lines)
+    line = lines(i);
+    position = str2double(split(line, "  "));
+    positions(i, :) = [position(end-1) position(end)];
+end
+
+
+% Generate random points within hand
+targetpositions = zeros([100, 2]);
+
+n = 0;
+while n < 100
+    x = rand()*(max(positions(:,1))-min(positions(:, 1))) + min(positions(:, 1));
+    y = rand()*(max(positions(:,2))-min(positions(:, 2))) + min(positions(:, 2));
+
+    if inpolygon(x,y,positions(:,1),positions(:,2))
+        n = n + 1;
+        targetpositions(n, :) = [x y];
+    end
+end
 
 s = serialport("COM18",230400, "Timeout", 600);
 
@@ -36,9 +36,12 @@ for i = 1:n
     end
 
     if mod(i+5, 10) == 0
-        plot(positions(:,1), positions(:,2));
+        plot(positions(:,1), positions(:,2), 'color', 'k', 'linewidth', 2);
         hold on
-        scatter(targetpositions(current,1), targetpositions(current,2), 30, 'r', 'filled');
+        scatter(targetpositions(current,1), targetpositions(current,2), 50, 'r', 'filled');
+        set(gcf, 'color', 'w');
+        axis off
+        xlim([-150 -50]);
         current = current + 1
     end
 
@@ -47,7 +50,7 @@ for i = 1:n
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
 
-    if current == 101 % Exit after last stimulation is recorded
+    if current == 102 % Exit after last stimulation is recorded
         break
     end
 

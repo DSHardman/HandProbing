@@ -117,3 +117,26 @@ data = char(data);
 data = data(1:end-2); % Remove final comma
 
 clipboard('copy', string(data));
+
+%% Copy top non-combined combinations to clipboard for arduino
+% Note arduino code subtracts 1 to account for different indexing system
+
+% uniquerankings = mod(ranking-1, 32*31*30*29)+1;
+uniquerankings = zeros([length(ranking), 1]);
+for i = 1:length(ranking)
+    uniquerankings(i) = ceil(ranking(i)/2);
+end
+
+uniquerankings = unique(uniquerankings,'stable');
+
+data = "";
+for i = 1:2784
+    data = data + string(electrodes(uniquerankings(i), 1)) + ", " + ...
+        string(electrodes(uniquerankings(i), 2)) + ", " + ...
+        string(electrodes(uniquerankings(i), 3)) + ", " + ...
+        string(electrodes(uniquerankings(i), 4)) + ", ";
+end
+data = char(data);
+data = data(1:end-2); % Remove final comma
+
+clipboard('copy', string(data));
