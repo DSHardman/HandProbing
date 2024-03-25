@@ -1,4 +1,4 @@
-s = serialport("COM18",230400, "Timeout", 600);
+s = serialport("COM9",230400, "Timeout", 600);
 
 % stimulations = ["Full Grasp" "Finger Squeeze" "Middle Finger" "Thumb" "Nothing" "Ruler Base"];
 % 

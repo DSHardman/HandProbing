@@ -23,9 +23,10 @@ while n < 100
     end
 end
 
-s = serialport("COM18",230400, "Timeout", 600);
+s = serialport("COM9",230400, "Timeout", 600);
 
 n = 1020; % number of frames to record
+% alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1
 alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1
 times(n) = datetime();
 
@@ -36,15 +37,17 @@ for i = 1:n
     end
 
     if mod(i+5, 10) == 0
+        current
         plot(positions(:,1), positions(:,2), 'color', 'k', 'linewidth', 2);
         hold on
         scatter(targetpositions(current,1), targetpositions(current,2), 50, 'r', 'filled');
         set(gcf, 'color', 'w');
         axis off
         xlim([-150 -50]);
-        current = current + 1
+        current = current + 1;
     end
 
+    % data = read(s, (5568*2 + 4), "int16");
     data = read(s, (5568*2 + 4), "int16");
     assert(length(find(data==-1)) == 4);
     alldata(i, :) = data;

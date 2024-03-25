@@ -1,4 +1,4 @@
-s={steelbolts, touch};
+s={steelbolts, damages};
 legendlabel = {"none"; "Steel"; "Touch"};
 
 

@@ -2,7 +2,7 @@ load("electrodes.mat");
 load("PositionBolt/MLTests/rankings.mat");
 electrodes = [electrodes; electrodes];
 n = 150; % How many of the best ranked to look at?
-\
+
 
 %% Gap Distributions
 figure();
@@ -15,6 +15,7 @@ title("F-Test");
 subplot(4,1,4); Igapdistribution(envranking, n, electrodes);
 title("Environmental");
 sgtitle("I Gap Distribution");
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 figure();
 subplot(4,1,1); Vgapdistribution(analytic, n, electrodes);
@@ -26,6 +27,7 @@ title("F-Test");
 subplot(4,1,4); Vgapdistribution(envranking, n, electrodes);
 title("Environmental");
 sgtitle("V Gap Distribution");
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 %% Electrode Distributions: figure version
 figure();
@@ -46,6 +48,7 @@ title("F-Test");
 subplot(4,1,4); totalelectrodedistribution(envranking, n, electrodes);
 title("Environmental");
 sgtitle("Total Electrode Distributions");
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 figure();
 subplot(4,1,1); Ielectrodedistribution(analytic, n, electrodes);
@@ -57,6 +60,7 @@ title("F-Test");
 subplot(4,1,4); Ielectrodedistribution(envranking, n, electrodes);
 title("Environmental");
 sgtitle("I Electrode Distributions");
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 figure();
 subplot(4,1,1); Velectrodedistribution(analytic, n, electrodes);
@@ -68,6 +72,7 @@ title("F-Test");
 subplot(4,1,4); Velectrodedistribution(envranking, n, electrodes);
 title("Environmental");
 sgtitle("V Electrode Distributions");
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 %% Circular Distributions
 figure();
@@ -82,7 +87,7 @@ title("F-Test");
 subplot(5,1,5); circulardistributions(envranking, n, electrodes);
 title("Environmental");
 sgtitle("Circular Pattern Distributions");
-
+set(gcf, 'position', [488   120   560   638], 'color', 'w');
 
 
 % %% Rolling plot
