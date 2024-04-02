@@ -1,30 +1,36 @@
-% load("Weekend.mat");
+load("Weekend.mat");
 
-load("Weekend2.mat"); load("Weekend2Conditions.mat");
+% load("Weekend2.mat"); load("Weekend2Conditions.mat");
 alldata = alldata(:, 1:end-4); % remove -1s
 
-meanplots = zeros(1200, 870);
+% meanplots = zeros(1200, 870);
 
 yyaxis left
-for i = 2:2:870
-    reading = smooth(mean(alldata(1:end,(i-1)+[1:992:1725211]).'), 10)*22/1024;
+% for i = 2:2:870
+%     reading = smooth(mean(alldata(1:end,(i-1)+[1:992:1725211]).'), 10)*22/1024;
+%     plot(seconds(times(1:end)-times(1))/3600, reading-reading(1), 'color', 'k', 'LineStyle', '-', 'marker', 'none');
+%     % meanplots(:, i) = reading-reading(1);
+%     hold on
+% end
+
+for i = 1:2:1740
+    reading = smooth(mean(alldata(1:end,i+[1:1984:1725211]).'), 10)*22/1024;
     plot(seconds(times(1:end)-times(1))/3600, reading-reading(1), 'color', 'k', 'LineStyle', '-', 'marker', 'none');
-    meanplots(:, i) = reading-reading(1);
     hold on
 end
 
-ylim([-0.4 0.8]);
+ylim([-0.8 1]);
 
 yyaxis right
 
-% % Humidity Overlay
-% plot(seconds(times(1:end)-times(1))/3600, conditionsync(:, 1), 'color', 'r', 'LineWidth', 3);
-% ylim([25 60]);
+% Humidity Overlay
+plot(seconds(times(1:end)-times(1))/3600, conditionsync(:, 1), 'color', 'r', 'LineWidth', 3);
+ylim([18 60]);
 
-% Temperature Overlay
-plot(seconds(times(1:end)-times(1))/3600, conditionsync(:, 2), 'color', 'r', 'LineWidth', 3);
-set(gca, 'Ydir', 'reverse');
-ylim([7 25]);
+% % Temperature Overlay
+% plot(seconds(times(1:end)-times(1))/3600, conditionsync(:, 2), 'color', 'r', 'LineWidth', 3);
+% set(gca, 'Ydir', 'reverse');
+% ylim([7 25]);
 
 % x = seconds(conditiontimessync-conditiontimesync(1));
 % f = fit(x.', conditions(:,2), 'poly2');

@@ -143,7 +143,7 @@ function barvals = totalelectrodedistribution(testranking, n, electrodes)
     barvals = zeros([8, 1]);
     for i = 1:n
         for j = 1:8
-            if any(electrodes(testranking(i), 3:4)==j)
+            if any(electrodes(testranking(i), :)==j)
                 barvals(j) = barvals(j) + 1;
             end
         end

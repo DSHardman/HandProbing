@@ -59,7 +59,38 @@ bar([mean(Uerrorsopop(100, :)), mean(errorsopop(100, :)),...
     mean(Uerrorsadad(100, :)), mean(errorsadad(100, :)),...
     mean(errorsall(100, :))]);
 
+%% Create Error Map
 
+maperrors = zeros([399, 1]);
+ranking = franking(responses, targetpositions);
+
+maperrors(1) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, 2:399, 1);
+for i = 2:398
+    if mod(i,10)==0
+        i
+    end
+    maperrors(i) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, [1:i-1 i+1:399], i);
+end
+maperrors(399) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, 1:398, 399);
+
+% scatter(targetpositions(:,1), targetpositions(:,2), 20, maperrors, 'filled');
+interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), maperrors);
+[xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
+                    linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
+value_interp = interpolant(xx,yy);
+value_interp = max(value_interp, 0); % Ignore any negative interpolated values
+% Remove points from outside hand
+for i = 1:size(xx,1)
+    for j = 1:size(xx,2)
+        if ~inpolygon(xx(i,j),yy(i,j), outline(:,1), outline(:,2))
+            value_interp(i,j) = nan;
+        end
+    end
+end
+contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
+colorbar();
+axis off
+set(gcf, 'color', 'w');
 
 %% Plot sensitivity maps
 for i = 1:100
@@ -72,7 +103,7 @@ for i = 1:100
     % [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
     %                     linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
     % value_interp = interpolant(xx,yy); 
-    % % Remove points from outside circle
+    % % Remove points from outside hand
     % for i = 1:size(xx,1)
     %     for j = 1:size(xx,2)
     %         if ~inpolygon(xx(i,j),yy(i,j), outline(:,1), outline(:,2))
@@ -158,8 +189,8 @@ function error = wamtesting(combinations, responses, targetpositions, figs, trai
             scatter(prediction(1), prediction(2), 50, 'm', 'filled');
             axis off
             set(gcf, 'position', [871   531   272   284], 'color', 'w');
-            % pause();
-            % clf
+            pause();
+            clf
         end
     end
     error = error/size(testresponses, 1); % calculate mean

@@ -7,27 +7,27 @@
 %% Part 2 of figure: inducing different fields from the same conditions
 figure();
 subplot(1,5,1);
-calculatefields(1000, -950, nan, 1, [1;4]);
+calculatefields(1, 30, nan, 1, [1;4]);
 subplot(1,5,2);
-calculatefields(1000, -950, nan, 3, [4;5]);
+calculatefields(1, 30, nan, 3, [4;5]);
 subplot(1,5,3);
-calculatefields(1000, -950, nan, 5, [4;6]);
+calculatefields(1, 30, nan, 5, [4;6]);
 subplot(1,5,4);
-calculatefields(1000, -950, nan, 7, [2;6]);
+calculatefields(1, 30, nan, 7, [2;6]);
 subplot(1,5,5);
-calculatefields(1000, -950, nan, 9, [2;3]);
+calculatefields(1, 30, nan, 9, [2;3]);
 set(gcf, 'color', 'w', 'Position', [35         338        1467         420]);
 
 %% Corresponding responses plot
-% figure();
-% data = steelbolts.rms10k(); plot(smooth(data(:, 1598)));
-% hold on
-% data = melting.rms10k(); plot(smooth(data(:, 1598)));
-% data = damages.rms10k(); plot(smooth(data(:, 1598)));
-% data = pressrobot.rms10k(); plot(smooth(data(:, 1598)));
-% data = touchsingle.rms10k(); plot(smooth(data(:, 1598)));
-% data = plasticcaps.rms10k(); plot(smooth(data(:, 1598)));
-% bar([Aresponse([steelbolts melting damages pressrobot touchsingle plasticcaps]); ABresponse(touch)]);
+figure();
+data = steelbolts.rms10k(); plot(smooth(data(:, 1598)));
+hold on
+data = melting.rms10k(); plot(smooth(data(:, 1598)));
+data = damages.rms10k(); plot(smooth(data(:, 1598)));
+data = pressrobot.rms10k(); plot(smooth(data(:, 1598)));
+data = touchsingle.rms10k(); plot(smooth(data(:, 1598)));
+data = plasticcaps.rms10k(); plot(smooth(data(:, 1598)));
+bar([Aresponse([steelbolts melting damages pressrobot touchsingle plasticcaps]); ABresponse(touch)]);
 
 function responsemags = Aresponse(modalities)
     responsemags = zeros([length(modalities), 1]);

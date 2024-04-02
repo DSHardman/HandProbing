@@ -43,8 +43,8 @@ end
 
 %heatmap(reshape([generalranking; NaN], [30, 56]).', 'XDisplayLabels',NaN*ones(30,1), 'YDisplayLabels',NaN*ones(56,1));
 
-channel = uniqueranking(1);
-% channel = generalranking(1);
+% channel = uniqueranking(1);
+channel = generalranking(3);
 
 responsemags = zeros([length(modalities), 1]);
 % figure();

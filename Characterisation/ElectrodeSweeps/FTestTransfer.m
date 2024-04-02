@@ -2,7 +2,8 @@ load("Data/Extracted/Recordings2D.mat");
 load("PositionBolt/MLTests/rankings.mat");
 
 figure();
-transferFTest({steelbolts damages}, combsranking, 50);
+transferFTest({steelbolts pressrobot}, combsranking, 50);
+axis equal
 % figure();
 % transferFTest({steelbolts melting}, combsranking, 50);
 % figure();
