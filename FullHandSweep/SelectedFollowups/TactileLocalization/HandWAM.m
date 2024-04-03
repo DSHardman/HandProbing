@@ -23,41 +23,41 @@ maximumnumber = 100;
 
 my_colors;
 
-%OPOP
-errorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
-    targetpositions, repetitions, maximumnumber, colors(1,:), 1);
-
-%OPAD
-errorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
-    targetpositions, repetitions, maximumnumber, colors(2,:), 1);
-
-%ADAD
-errorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
-    targetpositions, repetitions, maximumnumber, colors(3,:), 1);
-
-% Full Selection
-errorsall = convergenceplot(responses, targetpositions, repetitions,...
-    maximumnumber, colors(4,:), 1);
-
-box off
-set(gca, 'linewidth', 2, 'fontsize', 15);
-xlabel("Number of Combinations");
-ylabel("Error (mm)");
-
-%% Produce WAM bar plot
-figure();
-Uerrorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
-    targetpositions, repetitions, maximumnumber, colors(1,:), 0);
-Uerrorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
-    targetpositions, repetitions, maximumnumber, colors(2,:), 0);
-Uerrorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
-    targetpositions, repetitions, maximumnumber, colors(3,:), 0);
-
-figure();
-bar([mean(Uerrorsopop(100, :)), mean(errorsopop(100, :)),...
-    mean(Uerrorsopad(100, :)), mean(errorsopad(100, :)),...
-    mean(Uerrorsadad(100, :)), mean(errorsadad(100, :)),...
-    mean(errorsall(100, :))]);
+% %OPOP
+% errorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(1,:), 1);
+% 
+% %OPAD
+% errorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(2,:), 1);
+% 
+% %ADAD
+% errorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(3,:), 1);
+% 
+% % Full Selection
+% errorsall = convergenceplot(responses, targetpositions, repetitions,...
+%     maximumnumber, colors(4,:), 1);
+% 
+% box off
+% set(gca, 'linewidth', 2, 'fontsize', 15);
+% xlabel("Number of Combinations");
+% ylabel("Error (mm)");
+% 
+% %% Produce WAM bar plot
+% figure();
+% Uerrorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(1,:), 0);
+% Uerrorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(2,:), 0);
+% Uerrorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(3,:), 0);
+% 
+% figure();
+% bar([mean(Uerrorsopop(100, :)), mean(errorsopop(100, :)),...
+%     mean(Uerrorsopad(100, :)), mean(errorsopad(100, :)),...
+%     mean(Uerrorsadad(100, :)), mean(errorsadad(100, :)),...
+%     mean(errorsall(100, :))]);
 
 %% Create Error Map
 
@@ -93,28 +93,30 @@ axis off
 set(gcf, 'color', 'w');
 
 %% Plot sensitivity maps
-for i = 1:100
-    scatter(targetpositions(:, 1), targetpositions(:,2), 50, responses(:, ranking(i)), 'filled');
-    % title(string(i));
-    % colorbar
-    % clim([0 0.5*max(abs(responses(:, i)))]);
-    % vals = responses(:, ranking(i));
-    % interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
-    % [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
-    %                     linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
-    % value_interp = interpolant(xx,yy); 
-    % % Remove points from outside hand
-    % for i = 1:size(xx,1)
-    %     for j = 1:size(xx,2)
-    %         if ~inpolygon(xx(i,j),yy(i,j), outline(:,1), outline(:,2))
-    %             value_interp(i,j) = nan;
-    %         end
-    %     end
-    % end
-    % contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
+for i = 1:10
+    % scatter(targetpositions(:, 1), targetpositions(:,2), 50, abs(responses(:, ranking(i))), 'filled');
+
+    vals = abs(responses(:, ranking(i)));
+    interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
+    [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
+                        linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
+    value_interp = interpolant(xx,yy); 
+    value_interp = max(value_interp, 0); % Don't allow extrapolation below zero
+    % Remove points from outside hand
+    for k = 1:size(xx,1)
+        for j = 1:size(xx,2)
+            if ~inpolygon(xx(k,j),yy(k,j), outline(:,1), outline(:,2))
+                value_interp(k,j) = nan;
+            end
+        end
+    end
+    contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
     axis off
     set(gcf, 'position', [871   531   272   284], 'color', 'w');
-    pause();
+    colormap hot
+    set(gcf, 'position', [871   419   400   396], 'color', 'w');
+    print(string(i)+'.png','-dpng');
+    % pause();
 end
 
 

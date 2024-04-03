@@ -29,8 +29,9 @@ for i = 1:n
     %     fprintf(allstimulations(current) + "\n");
     %     current = current + 1;
     % end
-
+    tic
     data = read(s, (5568*2 + 4), "int16");
+    toc
     assert(length(find(data==-1)) == 4);
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
