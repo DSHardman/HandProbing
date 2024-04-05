@@ -38,26 +38,30 @@ my_colors;
 % % Full Selection
 % errorsall = convergenceplot(responses, targetpositions, repetitions,...
 %     maximumnumber, colors(4,:), 1);
-% 
-% box off
-% set(gca, 'linewidth', 2, 'fontsize', 15);
-% xlabel("Number of Combinations");
-% ylabel("Error (mm)");
-% 
-% %% Produce WAM bar plot
-% figure();
-% Uerrorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
-%     targetpositions, repetitions, maximumnumber, colors(1,:), 0);
-% Uerrorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
-%     targetpositions, repetitions, maximumnumber, colors(2,:), 0);
-% Uerrorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
-%     targetpositions, repetitions, maximumnumber, colors(3,:), 0);
-% 
-% figure();
-% bar([mean(Uerrorsopop(100, :)), mean(errorsopop(100, :)),...
-%     mean(Uerrorsopad(100, :)), mean(errorsopad(100, :)),...
-%     mean(Uerrorsadad(100, :)), mean(errorsadad(100, :)),...
-%     mean(errorsall(100, :))]);
+
+% % Full Selection Unranked
+% errorsall = convergenceplot(responses(:, randperm(11140)), targetpositions, repetitions,...
+%     maximumnumber, colors(4,:), 0);
+
+box off
+set(gca, 'linewidth', 2, 'fontsize', 15);
+xlabel("Number of Combinations");
+ylabel("Error (mm)");
+
+%% Produce WAM bar plot
+figure();
+Uerrorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
+    targetpositions, repetitions, maximumnumber, colors(1,:), 0);
+Uerrorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
+    targetpositions, repetitions, maximumnumber, colors(2,:), 0);
+Uerrorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
+    targetpositions, repetitions, maximumnumber, colors(3,:), 0);
+
+figure();
+bar([mean(Uerrorsopop(100, :)), mean(errorsopop(100, :)),...
+    mean(Uerrorsopad(100, :)), mean(errorsopad(100, :)),...
+    mean(Uerrorsadad(100, :)), mean(errorsadad(100, :)),...
+    mean(errorsall(100, :))]);
 
 %% Create Error Map
 
@@ -129,8 +133,8 @@ ranking = franking(responses, targetpositions);
 for i = 1:7
     wamtesting(ranking(1:100), responses, targetpositions, 1, nonfilmindices, filmindices(i));
     plot(outline(:,1), outline(:,2), 'color', 'k');
-    print("video"+string(i)+".svg", "-dsvg");
-    clf
+    % print("video"+string(i)+".svg", "-dsvg");
+    % clf
 end
 %% F-Test Ranking
 function ranking = franking(responses, targetpositions)
@@ -148,6 +152,8 @@ end
 
 %% WAM
 function error = wamtesting(combinations, responses, targetpositions, figs, traininds, testinds)
+    load("HandOutline.mat");
+        
     responses = tanh(normalize(responses)); % Deal with outliers
 
     % Generate test & train sets, if not explicitly input
@@ -185,10 +191,27 @@ function error = wamtesting(combinations, responses, targetpositions, figs, trai
         error = error + rssq(prediction-testpositions(i,:));
 
         if figs
-            scatter(targetpositions(:, 1), targetpositions(:, 2), 50, sum, 'filled');
+            % scatter(targetpositions(:, 1), targetpositions(:, 2), 50, sum, 'filled');
+            vals = sum;
+            interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
+            [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
+                                linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
+            value_interp = interpolant(xx,yy); 
+            value_interp = max(value_interp, 0); % Don't allow extrapolation below zero
+            % Remove points from outside hand
+            for k = 1:size(xx,1)
+                for j = 1:size(xx,2)
+                    if ~inpolygon(xx(k,j),yy(k,j), outline(:,1), outline(:,2))
+                        value_interp(k,j) = nan;
+                    end
+                end
+            end
+            contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
+            
+            
             hold on
-            scatter(testpositions(i, 1), testpositions(i, 2), 50, 'r', 'filled');
-            scatter(prediction(1), prediction(2), 50, 'm', 'filled');
+            % scatter(testpositions(i, 1), testpositions(i, 2), 50, 'r', 'filled');
+            % scatter(prediction(1), prediction(2), 50, 'm', 'filled');
             axis off
             set(gcf, 'position', [871   531   272   284], 'color', 'w');
             pause();
