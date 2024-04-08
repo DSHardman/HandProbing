@@ -1,4 +1,4 @@
-load("Test1.mat");
+% load("Test1.mat");
 rmsaverages = zeros([5, 870]);
 for i = 1:2:1740
     reading = mean(alldata(1:end,i+[1:1984:1725211]).');

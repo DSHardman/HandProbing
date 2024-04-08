@@ -12,7 +12,7 @@ s = serialport("COM9",230400, "Timeout", 600);
 %     allstimulations = [allstimulations stimulations(order(i))];
 % end
 
-desiredduration = 240; % in seconds
+desiredduration = 300; % in seconds
 n = round(desiredduration/2.33);
 
 % n = 1000; % number of frames to record

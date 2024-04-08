@@ -8,6 +8,7 @@ classdef Recording8
         eventboundaries % start and stop indicies of each event
         eventlabels % Text descriptions of events
         fingerprint % at 10k rms
+        coeffs % previously referred to as fingerprint
     end
 
     methods
@@ -75,8 +76,17 @@ classdef Recording8
             outobj = obj;
         end
 
+        function outobj = calculatefingerprint(obj)
+            outobj = obj;
+            outobj.fingerprint = zeros([1679, 1]);
+            [~, ranking] = sort(abs(obj.coeffs), 'descend');
+            for i = 1:1679
+                outobj.fingerprint(i) = find(ranking==i);
+            end
+        end
+
         function plotfingerprint(obj)
-            heatmap(reshape([abs(obj.fingerprint); NaN], [30, 56]).',...% "colormap", gray,...
+            heatmap(reshape([obj.fingerprint; NaN], [30, 56]).',...% "colormap", gray,...
         'XDisplayLabels',NaN*ones(30,1), 'YDisplayLabels',NaN*ones(56,1));
         end
     end
