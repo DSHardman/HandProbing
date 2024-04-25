@@ -48,9 +48,19 @@ axis off
 colormap cool
 colorbar; clim([0 0.035]);
 
+% subplot(2,2,4);
+% load("Random20Trained.mat");
+% scatter(testT(1,:), testT(2,:), 50, randomerrors, 'filled');
+% xlim([-0.05 0.05]);
+% ylim([-0.05 0.05]);
+% axis square
+% axis off
+% colormap cool
+% colorbar; clim([0 0.035]);
+
 subplot(2,2,4);
-load("Random20Trained.mat");
-scatter(testT(1,:), testT(2,:), 50, randomerrors, 'filled');
+load("Top20Environment.mat");
+scatter(testT(1,:), testT(2,:), 50, errors20env, 'filled');
 xlim([-0.05 0.05]);
 ylim([-0.05 0.05]);
 axis square
