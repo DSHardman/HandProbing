@@ -2,7 +2,7 @@ load("Data/Extracted/Recordings2D.mat");
 load("PositionBolt/MLTests/rankings.mat");
 
 figure();
-transferFTest({steelbolts pressrobot}, combsranking, 50);
+transferFTest({steelbolts melting}, combsranking, 50);
 axis equal
 % figure();
 % transferFTest({steelbolts melting}, combsranking, 50);
@@ -50,9 +50,35 @@ function pcaevents(Y, recordingobject, startingindex, col)
 
     % If no events are defined, plot path over time then exit
     if isempty(recordingobject.eventboundaries)
-        plot(Y(startingindex+1:startingindex+size(recordingobject.rms10k, 1), 1),...
-            Y(startingindex+1:startingindex+size(recordingobject.rms10k, 1), 2),...
+        % plot(Y(startingindex+1:startingindex+size(recordingobject.rms10k, 1), 1),...
+        %     Y(startingindex+1:startingindex+size(recordingobject.rms10k, 1), 2),...
+        %     "Color", col, "linewidth", 2);
+
+        % Or animate parametric plot and write to file
+
+        v = VideoWriter("parametricvideo.avi", 'Uncompressed AVI');
+        v.FrameRate = 30;
+        open(v);
+        for i = 1:size(recordingobject.rms10k, 1)
+            plot(Y(startingindex+1:startingindex+i, 1),...
+            Y(startingindex+1:startingindex+i, 2),...
             "Color", col, "linewidth", 2);
+            xlim([-0.07 0.05]);
+            ylim([-0.05 0.04]);
+            set(gcf, "color", "w");
+            xlabel("PCA 1");
+            ylabel("PCA 2");
+            set(gca, 'linewidth', 2, 'fontsize', 18);
+            box off
+            axis square
+            set(gca,'XColor','k','YColor','k');
+            times = recordingobject.times;
+            title(string(seconds(times(i)-times(1)))+"s");
+            frame = getframe(gcf);
+            writeVideo(v,frame);
+            clf;
+        end
+        close(v);
         
         % scatter(Y(startingindex+1, 1), Y(startingindex+1, 2), 20, col, "filled"); % blob at start
         return
