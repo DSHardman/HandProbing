@@ -1,4 +1,4 @@
-s = serialport("COM9",230400, "Timeout", 600);
+s = serialport("COM19",230400, "Timeout", 600);
 
 % stimulations = ["Full Grasp" "Finger Squeeze" "Middle Finger" "Thumb" "Nothing" "Ruler Base"];
 % 
@@ -12,8 +12,9 @@ s = serialport("COM9",230400, "Timeout", 600);
 %     allstimulations = [allstimulations stimulations(order(i))];
 % end
 
-desiredduration = 300; % in seconds
+desiredduration = 20; % in seconds
 n = round(desiredduration/2.33);
+% n = round(desiredduration/1.39);
 
 % n = 1000; % number of frames to record
 alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1

@@ -1,11 +1,11 @@
 % load("Weekend2.mat");
 % load("Weekend2Conditions.mat");
 
-% averages = zeros([size(alldata, 1), 870]);
-% for i = 1:2:1740
-%     reading = smooth(mean(alldata(1:end,i+[1:1984:1725211]).'), 10)*22/1024;
-%     averages(:, (i+1)/2) = reading-reading(1);
-% end
+averages = zeros([size(alldata, 1), 870]);
+for i = 1:2:1740
+    reading = smooth(mean(alldata(1:end,i+[1:1984:1725211]).'), 10)*22/1024;
+    averages(:, (i+1)/2) = reading-reading(1);
+end
 
 ranking = fsrftest(averages, conditionsync(:, 1));
 inputs = averages(:, ranking(1:50)).';

@@ -1,3 +1,4 @@
+%% Original
 responsemag = zeros([1726080, 1]);
 
 for i = 1:1726080
@@ -13,3 +14,7 @@ end
 
 [~,ind] = sort(responsemag, 'descend');
 ranking = ind;
+
+%% Alternatively: PCA (if possible)
+[coeff,~,~,~,~,~] = pca(alldata);
+[~,ranking] = sort(mean(abs(coeff(:,1)), 2), 'descend');

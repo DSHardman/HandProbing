@@ -1,5 +1,6 @@
 function plotelectrodes(ranking)
-    load("electrodes.mat");
+    load("electrodesfull.mat");  % Without off-by-one
+    % load("electrodesfull.mat"); % With off-by-one
     electrodes = electrodes(ranking, :);
 
     viscircles([0 0], 1, 'color', 'k');

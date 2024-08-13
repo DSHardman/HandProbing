@@ -1,8 +1,8 @@
-s = serialport("COM9",230400, "Timeout", 600);
+s = serialport("COM19",230400, "Timeout", 600);
 % configureCallback(s, "byte", 50000, @testfunc);
 % disp(datestr(datetime("now"),'HH:MM:SS:FFF'));
 
-n = 5;
+n = 24;
 
 alldata = zeros(n, 2*863040+4);
 
@@ -16,7 +16,7 @@ for i = 1:n
     toc
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
-    % save("conditions.mat", "alldata", "times");
+    save("touchranking.mat", "alldata", "times");
 end
 
 % data = read(s, (86300), "int16");
