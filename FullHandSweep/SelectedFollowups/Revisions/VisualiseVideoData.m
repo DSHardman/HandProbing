@@ -14,11 +14,11 @@ clear frame
 
 % load("FilmedTests/TFilmedMetal.mat");
 % testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
-% frame = 3;
+% frame = 9;
 
-load("FilmedTests/TFilmedMiscTactile.mat");
-testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
-frame = 4;
+% load("FilmedTests/TFilmedMiscTactile.mat");
+% testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
+% frame = 4;
 
 % load("FilmedTests/TFilmedPencil.mat");
 % testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
@@ -55,10 +55,10 @@ for i = 1:length(targetpositions)
     responses(i, :) = alldata(2*i, :) - alldata(2*i-1, :);
 end
 
-% testresponses = responses(301:330, :);
-% responses = responses([1:300 331:end], :);
-% testpositions = targetpositions(301:330, :);
-% targetpositions = targetpositions([1:300 331:end], :);
+testresponses = responses(301:330, :);
+responses = responses([1:300 331:end], :);
+testpositions = targetpositions(301:330, :);
+targetpositions = targetpositions([1:300 331:end], :);
 
 % idxf = find(targetpositions(:,3)==0);
 % targetpositions = targetpositions(idxf, :);
@@ -68,18 +68,18 @@ end
 ranking = franking(responses, targetpositions);
 
 %% WAM localization using top N channels
-figure();
-if exist("frame", "var")
-    wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
-    title(string(frame));
-else
-    for frame = 1:size(testresponses, 1)
-        wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
-        title(string(frame));
-        pause()
-        clf
-    end
-end
+% figure();
+% if exist("frame", "var")
+%     wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
+%     title(string(frame));
+% else
+%     for frame = 1:size(testresponses, 1)
+%         wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
+%         title(string(frame));
+%         pause()
+%         clf
+%     end
+% end
 
 %% F-Test Ranking
 function ranking = franking(responses, targetpositions)
@@ -103,7 +103,8 @@ function wamvideos(combinations, responses, targetpositions, testresponses, i)
     [responses, C, S]= (normalize(responses)); 
     responses = tanh(responses);
 
-    testresponses = tanh(normalize(testresponses, "center", C, "scale", S));
+    % testresponses = tanh(normalize(testresponses, "center", C, "scale", S));
+    testresponses = tanh(normalize(testresponses));
 
 
     % Sum activation maps
@@ -113,6 +114,13 @@ function wamvideos(combinations, responses, targetpositions, testresponses, i)
         if isempty(find(isnan(newsum), 1))
             sum = sum + newsum;
         end
+    end
+
+    % Scale for visualisation
+    max(targetpositions(:,2))
+    for i = 1:length(targetpositions)
+        factor = 2 + abs(targetpositions(i,2))/58;
+        sum(i) = factor*sum(i);
     end
 
     % Plot prediction

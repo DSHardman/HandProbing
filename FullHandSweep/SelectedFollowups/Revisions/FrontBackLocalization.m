@@ -2,6 +2,8 @@ load("ExtractedSingleTouches.mat");
 % alldata = alldata(1:1600, :);
 % targetpositions = targetpositions(1:800, :);
 
+% alldata = alldata(:, 5749:end);
+
 % Give back touch locations a negative y position
 load("../TactileLocalization/HandOutline.mat");
 targetpositions(:, 2) = targetpositions(:, 2) - min(outline(:, 2));
@@ -16,7 +18,8 @@ for i = 1:length(targetpositions)
     responses(i, :) = alldata(2*i, :) - alldata(2*i-1, :);
 end
 
-% idxf = find(targetpositions(:,3)==0);
+% % Only data from a single side
+% idxf = find(targetpositions(:,3)==1);
 % targetpositions = targetpositions(idxf, :);
 % responses = responses(idxf, :);
 
@@ -25,17 +28,52 @@ ranking = franking(responses, targetpositions);
 
 %% WAM localization using top N channels: plot 10 random predictions from test set
 % Prediction in pink, ground truth in red
-figure();
-[error, sidepercent] = wamtesting(ranking(1:500), responses, targetpositions, 1);
-sgtitle("Mean error over entire test set: "+ string(error) + " mm, ");
+% figure();
+% [error, sidepercent] = wamtesting(ranking(1:500), responses, targetpositions, 1);
+% sgtitle("Mean error over entire test set: "+ string(error) + " mm, ");
 
-% for n = 1:20
-%     error = wamtesting(ranking(1:n*100), responses, targetpositions, 0);
-%     scatter(n, error);
+% for i = 1:20
+%     [error, sidepercent] = wamtesting(ranking(1:i*25), responses, targetpositions, 0);
+%     scatter(i*25, error, 50, 'k', 'filled');
 %     hold on
 % end
 
-% %% Plot sensitivity maps of top 10 configurations
+%% Create Error Map
+
+% maximumnumber = 350;
+% 
+% maperrors = zeros([1080, 1]);
+% ranking = franking(responses, targetpositions);
+% 
+% maperrors(1) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, 2:1080, 1);
+% for i = 2:1079
+%     if mod(i,10)==0
+%         i
+%     end
+%     maperrors(i) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, [1:i-1 i+1:1080], i);
+% end
+% maperrors(1080) = wamtesting(ranking(1:maximumnumber), responses, targetpositions, 0, 1:1079, 1080);
+% 
+% % scatter(targetpositions(:,1), targetpositions(:,2), 20, maperrors, 'filled');
+% interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), maperrors);
+% [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
+%                     linspace(min(targetpositions(:,2)), max(targetpositions(:,2)),100));
+% value_interp = interpolant(xx,yy);
+% value_interp = max(value_interp, 0); % Ignore any negative interpolated values
+% % Remove points from outside hand
+% for i = 1:size(xx,1)
+%     for j = 1:size(xx,2)
+%         if ~inpolygon(xx(i,j),abs(yy(i,j)), outline(:,1), outline(:,2))
+%             value_interp(i,j) = nan;
+%         end
+%     end
+% end
+% contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
+% colorbar();
+% axis off
+% set(gcf, 'color', 'w');
+
+%% Plot sensitivity maps of top 10 configurations
 % figure();
 % for i = 1:10
 %     subplot(2,5,i);
@@ -58,6 +96,62 @@ sgtitle("Mean error over entire test set: "+ string(error) + " mm, ");
 %     colormap hot
 % end
 
+%% Produce WAM convergence graph
+repetitions = 25;
+maximumnumber = 500;
+
+my_colors;
+
+% %OPOP
+% errorsopop = convergenceplot(responses(:, 2784*2+1:(2784+960)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(1,:), 1);
+% 
+%OPAD
+% errorsopad = convergenceplot(responses(:, (2784+960)*2+1:(2784+960+896)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(2,:), 1);
+% 
+% %ADAD
+% errorsadad = convergenceplot(responses(:, (2784+960+896)*2+1:2:(2784+960+896+928)*2),...
+%     targetpositions, repetitions, maximumnumber, colors(3,:), 1);
+% 
+% % Full Selection
+% errorsall = convergenceplot(responses, targetpositions, repetitions,...
+%     maximumnumber, colors(4,:), 1);
+
+% Full Selection Unranked
+errorsall = convergenceplot(responses(:, randperm(11140)), targetpositions, repetitions,...
+    maximumnumber, colors(4,:), 0);
+save("FullUnrankedpart2.mat", "errorsall");
+
+% OPAD Unranked
+errorsall = convergenceplot(responses(:, (2784+960)*2+1+randperm(896*2)), targetpositions, repetitions,...
+    maximumnumber, colors(2,:), 0);
+save("OPADUnrankedpart2.mat", "errorsall");
+% 
+% box off
+% set(gca, 'linewidth', 2, 'fontsize', 15);
+% xlabel("Number of Combinations");
+% ylabel("Error (mm)");
+
+% figure();
+% 
+% % Front only
+% inds = find(targetpositions(:,3)==0);
+% errorsall = convergenceplot(responses(inds, :), targetpositions(inds, :), repetitions,...
+%     maximumnumber, colors(1,:), 1);
+% save("FrontOnlyContinued.mat", "errorsall");
+
+% % Back only
+% inds = find(targetpositions(:,3)==1);
+% errorsall = convergenceplot(responses(inds, :), targetpositions(inds, :), repetitions,...
+%     maximumnumber, colors(1,:), 1);
+% save("BackOnly.mat", "errorsall");
+
+% box off
+% set(gca, 'linewidth', 2, 'fontsize', 15);
+% xlabel("Number of Combinations");
+% ylabel("Error (mm)");
+
 
 %% F-Test Ranking
 function ranking = franking(responses, targetpositions)
@@ -74,19 +168,23 @@ end
 
 
 %% Implement WAM method from Hardman et al., Tactile Perception in Hydrogel-based Robotic Skins, 2023
-function [error, sidepercent] = wamtesting(combinations, responses, targetpositions, figs)
+function [error, sidepercent] = wamtesting(combinations, responses, targetpositions, figs, traininds, testinds)
     load("../TactileLocalization/HandOutline.mat");
     outline(:,2) = outline(:,2)-min(outline(:,2));
 
     % % Normal
     responses = tanh(normalize(responses)); % Deal with outliers
 
-    % Generate test & train sets
-    P = randperm(length(targetpositions));
-    traininds = P(1:floor(0.9*length(targetpositions)));
-    testinds = P(ceil(0.9*length(targetpositions)):end);
+    % Generate test & train sets, if not explicitly input
+    if nargin == 4
+        P = randperm(length(targetpositions));
+        traininds = P(1:floor(0.9*length(targetpositions)));
+        testinds = P(ceil(0.9*length(targetpositions)):end);
+    end
+
     % traininds = [1:800 831:1080];
     % testinds = 801:830;
+
     testresponses = responses(testinds, :);
     testpositions = targetpositions(testinds, :);
     responses = responses(traininds, :);
@@ -111,39 +209,31 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
         [~, ind] = sort(sum, 'descend');
         n = min(8, size(responses, 2));
 
-        % % prediction = [mean(targetpositions(ind(1:n), 1)),...
-        % %                 mean(abs(targetpositions(ind(1:n), 2)))];
-        % 
-        % % Decide if prediction is front or back based on 49 brightest pixels
-        % if length(find(targetpositions(ind(1:min(49, size(responses, 2))), 3)==1)) > 24
-        %     % Predict back
-        %     pred_side = 1;
-        % else
-        %     % Predict front
-        %     pred_side = 0;
-        % end
-        % 
-        % % Is the prediction correct?
-        % if pred_side == testpositions(i, 3)
-        %     sidepercent = sidepercent + 1;
-        % end
-
         % Average over n brightest pixels on each side
         frontprediction = [0 0];
         backprediction = [0 0];
         frontcount = 0;
+        frontsum = 0;
         backcount = 0;
+        backsum = 0;
         k = 1;
         while 1
             if targetpositions(ind(k), 3) == 0 && frontcount < n
                 frontprediction = frontprediction + targetpositions(ind(k), 1:2);
                 frontcount = frontcount + 1;
+                frontsum = frontsum + sum(ind(k));
             elseif targetpositions(ind(k), 3) == 1 && backcount < n
                 backprediction = backprediction + targetpositions(ind(k), 1:2);
                 backcount = backcount + 1;
+                backsum = backsum + sum(ind(k));
             end
             k = k + 1;
             if frontcount == n && backcount == n
+                break
+            end
+
+            % Deal with data from a single side
+            if k > size(targetpositions, 1)
                 break
             end
         end
@@ -179,8 +269,13 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
             hold on
             % Add ground truth and predicted touch locations
             scatter(testpositions(i, 1), testpositions(i, 2), 30, 'r', 'filled');
-            scatter(frontprediction(1), frontprediction(2), 30, 'm', 'filled');
-            scatter(backprediction(1), backprediction(2), 30, 'm', 'filled');
+
+            if frontsum > backsum
+                scatter(frontprediction(1), frontprediction(2), 30, 'm', 'filled');
+            else
+                scatter(backprediction(1), backprediction(2), 30, 'm', 'filled');
+            end
+
             axis off
             set(gcf, 'color', 'w');
 
@@ -189,5 +284,29 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
     end
     error = error/size(testresponses, 1); % calculate mean
     error = error*3.32; % convert to mm
-    sidepercent = 100*sidepercent/size(testresponses, 1);
+end
+
+%% Plot convergence graph
+
+function errors = convergenceplot(responses, targetpositions, repetitions, maximumnumber, col, ranked)
+    errors = zeros([maximumnumber, repetitions]);
+    
+    % Ranked boolean determines whether F-Test order or just that given
+    if ~ranked
+        ranking = 1:length(targetpositions);
+    else
+        ranking = franking(responses, targetpositions);
+    end
+    
+    for i = 1:maximumnumber
+        i
+        for j = 1:repetitions
+            error = wamtesting(ranking(1:i), responses, targetpositions, 0);
+            errors(i, j) = error;
+        end
+    end
+
+    hold on
+    plot(mean(errors.'), 'linewidth', 2, 'color', col);
+
 end

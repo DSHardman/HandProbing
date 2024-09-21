@@ -1,30 +1,46 @@
-% No inclusion: homogeneous data
-homogeneous = idealresponse(NaN, NaN);
-
-% Generate x y positions within circle
-positions = [];
-for x = -1:0.05:1
-    for y = -1:0.05:1
-        if x^2 + y^2 <= 1
-            positions = [positions; x y];
-        end
-    end
-end
+% % No inclusion: homogeneous data
+% homogeneous = idealresponse(NaN, NaN, 0, NaN);
+% save("homogeneous.mat", "homogeneous");
+% 
+% % Generate x y positions within circle
+% positions = [];
+% signal_strength = 0.3;
+% % for temperature = -50:5:50
+% temperature = 0;
+%     for x = -1:0.02:1
+%         for y = -1:0.02:1
+%             if x^2 + y^2 <= 1
+%                 positions = [positions; x y temperature signal_strength];
+%             end
+%         end
+%     end
+% % end
+% 
+% save("positions.mat", "positions");
 
 % Run EIDORS forward solver for each function and add to measurements
 positionmeasurements = zeros([size(positions, 1), 1680]);
-for i = 1:size(positions, 1)
+for i = 5001:size(positions, 1)
     i
-    allmeasurements = idealresponse(positions(i, 1), positions(i, 2));
+    allmeasurements = idealresponse(positions(i, 1), positions(i, 2), positions(i, 3), positions(i, 4));
     positionmeasurements(i, :) = allmeasurements.';
+    if mod(i, 1000) == 0
+        save("measurements.mat", "positionmeasurements");
+    end
 end
 
+save("measurements.mat", "positionmeasurements");
             
-function allmeasurements = idealresponse(x, y)
+function allmeasurements = idealresponse(x, y, temperature, signal_strength)
+
+    % signal_strength between 0 (weakest) & 1 (strongest)
+    % temperature between -50 (coldest) & 50 (hottest, highest conductivity)
+    % temperature of 0 has no change from homogeneous state
+    temp_effect = -0.5*(cos((temperature+50)*pi/100));
 
     % Conductivity levels: can be changed
-    factor1 = 1000; % Originally 1000
-    factor2 = -950; % Originally -950
+    factor1 = 1 + temp_effect; % Originally 1000
+    factor2 = -signal_strength; % Originally -950
     
     % 2D Model
     imdl= mk_common_model('d2d1c',8);
@@ -37,7 +53,11 @@ function allmeasurements = idealresponse(x, y)
     if ~isnan(x)
         select_fcn = inline('(x+'+string(-x)+').^2+(y+'+string(-y)+').^2<0.15^2','x','y','z');
         img_v.elem_data = factor1 + factor2*elem_select(img_v.fwd_model, select_fcn);
+    else
+        select_fcn = inline('(x).^2+(y).^2<0.15^2','x','y','z');
+        img_v.elem_data = factor1 + 0*elem_select(img_v.fwd_model, select_fcn);
     end
+
     PLANE= [inf,inf,0]; % show voltages on this slice
     
     % Run through all tetrapolar combinations in same order as experiments
