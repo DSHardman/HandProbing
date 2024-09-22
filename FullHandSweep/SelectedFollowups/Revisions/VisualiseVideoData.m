@@ -1,12 +1,12 @@
 clear frame
 
-% load("FilmedTests/TFilmedDouble.mat");
-% testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
-% frame = 9;
+load("FilmedTests/TFilmedDouble.mat");
+testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
+frame = 6;
 
 % load("FilmedTests/DamageFilm.mat");
 % testresponses = alldata(2:end, :) - alldata(1, :);
-% frame = 4;
+% frame = 9;
 
 % load("FilmedTests/TFilmedHeat.mat");
 % testresponses = alldata(2:end, :) - alldata(2, :);
@@ -18,7 +18,7 @@ clear frame
 
 % load("FilmedTests/TFilmedMiscTactile.mat");
 % testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
-% frame = 4;
+% frame = 9;
 
 % load("FilmedTests/TFilmedPencil.mat");
 % testresponses = alldata(2:2:end, :) - alldata(1:2:end, :);
@@ -55,10 +55,15 @@ for i = 1:length(targetpositions)
     responses(i, :) = alldata(2*i, :) - alldata(2*i-1, :);
 end
 
-testresponses = responses(301:330, :);
-responses = responses([1:300 331:end], :);
-testpositions = targetpositions(301:330, :);
-targetpositions = targetpositions([1:300 331:end], :);
+% testresponses = responses(301:330, :);
+% responses = responses([1:300 331:end], :);
+% testpositions = targetpositions(301:330, :);
+% targetpositions = targetpositions([1:300 331:end], :);
+
+% testresponses = responses(1012:1019, :);
+% responses = responses([1:1011 1020:end], :);
+% testpositions = targetpositions(1012:1019, :);
+% targetpositions = targetpositions([1:1011 1020:end], :);
 
 % idxf = find(targetpositions(:,3)==0);
 % targetpositions = targetpositions(idxf, :);
@@ -67,19 +72,23 @@ targetpositions = targetpositions([1:300 331:end], :);
 %% Perform F-Test ranking
 ranking = franking(responses, targetpositions);
 
-%% WAM localization using top N channels
-% figure();
-% if exist("frame", "var")
-%     wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
-%     title(string(frame));
-% else
-%     for frame = 1:size(testresponses, 1)
-%         wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
-%         title(string(frame));
-%         pause()
-%         clf
-%     end
-% end
+% WAM localization using top N channels
+figure();
+if exist("frame", "var")
+    wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
+    % title(string(frame));
+    clim([0 110]);
+    set(gcf, 'Position', [1994          48         380         724]);
+else
+    for frame = 1:size(testresponses, 1)
+        wamvideos(ranking(1:800), responses, targetpositions, testresponses, frame);
+        title(string(frame));
+        % colorbar
+        % clim([0 110]);
+        pause()
+        clf
+    end
+end
 
 %% F-Test Ranking
 function ranking = franking(responses, targetpositions)
@@ -116,12 +125,48 @@ function wamvideos(combinations, responses, targetpositions, testresponses, i)
         end
     end
 
-    % Scale for visualisation
-    max(targetpositions(:,2))
-    for i = 1:length(targetpositions)
-        factor = 2 + abs(targetpositions(i,2))/58;
-        sum(i) = factor*sum(i);
+    % Prediction is the average location of the n brightest pixels
+    [~, ind] = sort(sum, 'descend');
+    n = min(8, size(responses, 2));
+
+    % Average over n brightest pixels on each side
+    frontprediction = [0 0];
+    backprediction = [0 0];
+    frontcount = 0;
+    frontsum = 0;
+    backcount = 0;
+    backsum = 0;
+    k = 1;
+    while 1
+        if targetpositions(ind(k), 3) == 0 && frontcount < n
+            frontprediction = frontprediction + targetpositions(ind(k), 1:2);
+            frontcount = frontcount + 1;
+            frontsum = frontsum + sum(ind(k));
+        elseif targetpositions(ind(k), 3) == 1 && backcount < n
+            backprediction = backprediction + targetpositions(ind(k), 1:2);
+            backcount = backcount + 1;
+            backsum = backsum + sum(ind(k));
+        end
+        k = k + 1;
+        if frontcount == n && backcount == n
+            break
+        end
+
+        % Deal with data from a single side
+        if k > size(targetpositions, 1)
+            break
+        end
     end
+    frontprediction = frontprediction./n;
+    backprediction = backprediction./n;
+
+
+    % % Scale for visualisation
+    % max(targetpositions(:,2))
+    % for i = 1:length(targetpositions)
+    %     factor = 2 + abs(targetpositions(i,2))/58;
+    %     sum(i) = factor*sum(i);
+    % end
 
     % Plot prediction
     vals = sum;
@@ -140,11 +185,18 @@ function wamvideos(combinations, responses, targetpositions, testresponses, i)
         end
     end
     contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
+
+    % hold on
+    % 
+    % if frontsum > backsum
+    %     scatter(frontprediction(1), frontprediction(2), 30, 'm', 'filled');
+    % else
+    %     scatter(backprediction(1), backprediction(2), 30, 'm', 'filled');
+    % end
     
-    hold on
     axis off
     set(gcf, 'color', 'w');
 
-    colorbar
+    % colorbar
     % clim([0 50]);
 end

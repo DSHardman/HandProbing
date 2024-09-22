@@ -122,19 +122,19 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
 
     % Alternative: test set is 801-820 touches
     traininds = randperm(length(targetpositions));
-    % for i = 1001:1020
-    %     ind = find(traininds==i);
-    %     traininds = [traininds(1:ind-1) traininds(ind+1:end)];
-    % end
-    % testinds = 1001:1020;
-
-    multimodaltraininds = randperm(180);
-    testinds = multimodaltraininds(1:25);
-
-    for i = 1:length(testinds)
-        ind = find(traininds==testinds(i));
+    for i = 301:330
+        ind = find(traininds==i);
         traininds = [traininds(1:ind-1) traininds(ind+1:end)];
     end
+    testinds = 301:330;
+
+    % multimodaltraininds = randperm(180);
+    % testinds = multimodaltraininds(1:25);
+    % 
+    % for i = 1:length(testinds)
+    %     ind = find(traininds==testinds(i));
+    %     traininds = [traininds(1:ind-1) traininds(ind+1:end)];
+    % end
 
 
     testresponses = responses(testinds, :);
@@ -199,9 +199,9 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
             rssq(abs(backprediction)-abs(testpositions(i, 1:2)))]);
 
         % Plot prediction
-        if figs && 0%i <= 20
+        if figs && i == 18
             % subplot(2,5,i);
-            subplot(2,10,i);
+            % subplot(2,10,i);
             % subplot(1,7,i);
             vals = sum;
             interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
@@ -222,7 +222,7 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
             
             hold on
             % Add ground truth and predicted touch locations
-            scatter(testpositions(i, 1), testpositions(i, 2), 30, 'r', 'filled');
+            % scatter(testpositions(i, 1), testpositions(i, 2), 30, 'r', 'filled');
 
             % if frontsum > backsum
             %     scatter(frontprediction(1), frontprediction(2), 30, 'm', 'filled');
