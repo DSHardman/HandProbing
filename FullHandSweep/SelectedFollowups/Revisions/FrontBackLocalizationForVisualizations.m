@@ -122,11 +122,17 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
 
     % Alternative: test set is 801-820 touches
     traininds = randperm(length(targetpositions));
-    for i = 301:330
-        ind = find(traininds==i);
+    % for i = 301:330
+    %     ind = find(traininds==i);
+    %     traininds = [traininds(1:ind-1) traininds(ind+1:end)];
+    % end
+    % testinds = 301:330;
+
+    testinds = [242 269 332 537];
+    for i = 1:4
+        ind = find(traininds==testinds(i));
         traininds = [traininds(1:ind-1) traininds(ind+1:end)];
     end
-    testinds = 301:330;
 
     % multimodaltraininds = randperm(180);
     % testinds = multimodaltraininds(1:25);
@@ -189,7 +195,7 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
                 break
             end
         end
-        frontprediction = frontprediction./n;
+        frontprediction = frontprediction./n
         backprediction = backprediction./n;
 
         
@@ -199,10 +205,14 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
             rssq(abs(backprediction)-abs(testpositions(i, 1:2)))]);
 
         % Plot prediction
-        if figs && i == 18
+        if figs && i == 1
             % subplot(2,5,i);
             % subplot(2,10,i);
             % subplot(1,7,i);
+
+            3.32*min([rssq(abs(frontprediction)-abs(testpositions(i, 1:2))),...
+            rssq(abs(backprediction)-abs(testpositions(i, 1:2)))])
+
             vals = sum;
             interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
             [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
@@ -240,7 +250,7 @@ function [error, sidepercent] = wamtesting(combinations, responses, targetpositi
         end
     end
     error = error/size(testresponses, 1); % calculate mean
-    error = error*3.32 % convert to mm
+    error = error*3.32; % convert to mm
 end
 
 %% Plot convergence graph

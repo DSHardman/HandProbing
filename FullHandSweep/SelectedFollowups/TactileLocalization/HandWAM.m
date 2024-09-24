@@ -219,7 +219,7 @@ function error = wamtesting(combinations, responses, targetpositions, figs, trai
         end
     end
     error = error/size(testresponses, 1); % calculate mean
-    error = error*3.32; % convert to mm
+    error = error*3.32 % convert to mm
 end
 
 
