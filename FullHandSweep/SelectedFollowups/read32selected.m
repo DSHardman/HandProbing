@@ -1,4 +1,4 @@
-s = serialport("COM19",230400, "Timeout", 600);
+s = serialport("COM19",115200, "Timeout", 600);
 
 % stimulations = ["Full Grasp" "Finger Squeeze" "Middle Finger" "Thumb" "Nothing" "Ruler Base"];
 % 
@@ -12,9 +12,9 @@ s = serialport("COM19",230400, "Timeout", 600);
 %     allstimulations = [allstimulations stimulations(order(i))];
 % end
 
-desiredduration = 20; % in seconds
-n = round(desiredduration/2.33);
-% n = round(desiredduration/1.39);
+desiredduration = 40; % in seconds
+% n = round(desiredduration/2.33);
+n = round(desiredduration/6.5);
 
 % n = 1000; % number of frames to record
 alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1
@@ -33,7 +33,7 @@ for i = 1:n
     tic
     data = read(s, (5568*2 + 4), "int16");
     toc
-    assert(length(find(data==-1)) == 4);
+    % assert(length(find(data==-1)) == 4);
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
 

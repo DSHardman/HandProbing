@@ -44,6 +44,8 @@ for i = 1:32
     targets(1) = i
     targets(2) = mod(i+16-1, 32)+1;
     for j = 1:32
+        targets(3) = j;
+        targets(4) = mod(j+1-1, 32)+1;
         if j~=targets(1) && j~=targets(2) && mod(j+1-1, 32)+1~=targets(1) && mod(j+1-1, 32)+1~=targets(2)
             targets(3) = j;
             targets(4) = mod(j+1-1, 32)+1;

@@ -19,3 +19,7 @@ Media/*
 FullHandSweep/SelectedFollowups/Revisions/EnvironmentalData/
 *.asv
 /GeneratingFields/Data
+/6PointProbing/channelresponses/Batch1
+/6PointProbing/channelresponses/Batch2
+/6PointProbing/channelresponses/Batch3
+/6PointProbing/channelresponses/Batch4
