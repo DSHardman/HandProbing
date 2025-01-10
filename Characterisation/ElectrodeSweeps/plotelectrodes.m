@@ -5,6 +5,8 @@ function plotelectrodes(ranking)
 
     viscircles([0 0], 1, 'color', 'k');
     hold on
+    plotnumber(8, 'k');
+    return
     for i = 1:2
         plotnumber(electrodes(i), 'r');
     end

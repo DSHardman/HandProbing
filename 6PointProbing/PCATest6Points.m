@@ -1,3 +1,5 @@
+%% Applying fig 3's fingerprinting direct to 6 point data - not used in new figure
+
 % PCA ranking of each - from RMS data only
 rankings = zeros([1680, 6]);
 for i = 1:6
@@ -25,11 +27,13 @@ for i = 1:1680
 end
 [~, generalranking] = sort(combinedweights, "ascend");
 
-% Determine uniqueness of specific probe
+% Determine uniqueness of specific probes
 % i.e. the greatest gap between probe ranking and average ranking
-n = 1; % look at the uniqueness of nth probe
+uniquerankings = zeros([1680, 6]);
 uniqueness = zeros([1680, 1]);
-for i = 1:1680
-    uniqueness(i) = find(generalranking==i) - find(rankings(:, n)==i);
+for n = 1:6
+    for i = 1:1680
+        uniqueness(i) = find(generalranking==i) - find(rankings(:, n)==i);
+    end
+    [~, uniquerankings(:, n)] = sort(uniqueness, "descend");
 end
-[~, uniqueranking] = sort(uniqueness, "descend");
