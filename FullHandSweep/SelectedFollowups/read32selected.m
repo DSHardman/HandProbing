@@ -1,4 +1,4 @@
-s = serialport("COM19",115200, "Timeout", 600);
+s = serialport("COM17",115200, "Timeout", 600);
 
 % stimulations = ["Full Grasp" "Finger Squeeze" "Middle Finger" "Thumb" "Nothing" "Ruler Base"];
 % 
@@ -15,6 +15,8 @@ s = serialport("COM19",115200, "Timeout", 600);
 desiredduration = 40; % in seconds
 % n = round(desiredduration/2.33);
 n = round(desiredduration/6.5);
+
+n = 2;
 
 % n = 1000; % number of frames to record
 alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1
@@ -47,8 +49,17 @@ clear s
 
 reading = HandCompare(alldata, times);
 
-% plot heatmaps
-subplot(2,1,1);
-heatmap(normalize(reading.rmsall(), "range", [0 1]).', "colormap", gray); grid off
-subplot(2,1,2);
-heatmap(normalize(reading.phaseall(), "range", [0 1]).', "colormap", gray); grid off
+plot(data);
+figure();
+r10 = reading.rmsall();
+
+r10 = alldata;
+[coeff,score] = pca(r10);
+[~,ranking] = sort(abs(coeff(:,1)), 'descend');
+heatmap(normalize(r10(:, ranking), "range", [0 1]).', "colormap", gray); grid off
+
+% % plot heatmaps
+% subplot(2,1,1);
+% heatmap(normalize(reading.rmsall(), "range", [0 1]).', "colormap", gray); grid off
+% subplot(2,1,2);
+% heatmap(normalize(reading.phaseall(), "range", [0 1]).', "colormap", gray); grid off
