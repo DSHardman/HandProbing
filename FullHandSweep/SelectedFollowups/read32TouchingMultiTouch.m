@@ -21,7 +21,7 @@ end
 
 s = serialport("COM17",230400, "Timeout", 600);
 
-n = 500; % number of frames to record
+n = 102; % number of frames to record
 alldata = zeros(2*n, 5100*2 + 4); % Final 4 should always be -1
 times(2*n) = datetime();
 
@@ -54,29 +54,32 @@ for i = 1:n
 
     current
 
-    subplot(1,2,1);
+    % subplot(1,2,1);
     set(gca, 'color', 'none');
     set(gca,'XColor', 'none','YColor','none');
     plot(positions(:,1), positions(:,2), 'color', 'k', 'linewidth', 2);
     hold on
-    scatter(multicats(targetpositions(current,1), 1), multicats(targetpositions(current,1), 2), 50, 'w', 'filled');
+    scatter(multicats(:, 1), multicats(:, 2), 10, 'k', 'filled');
+    scatter(multicats(targetpositions(current,1), 1), multicats(targetpositions(current,1), 2), 80, 'w', 'filled');
     axis off
     xlim([-150 -50]);
-    title("FRONT");
+    scatter(multicats(targetpositions(current,2), 1), multicats(targetpositions(current,2), 2), 80, 'g', 'filled');
 
-    subplot(1,2,2);
-    set(gca, 'color', 'none');
-    set(gca,'XColor', 'none','YColor','none');
-    plot(positions(:,1), positions(:,2), 'color', 'k', 'linewidth', 2);
-    hold on
-    scatter(multicats(targetpositions(current,2), 1), multicats(targetpositions(current,2), 2), 50, 'w', 'filled');
-    axis off
-    xlim([-150 -50]);
-    title("BACK");
+    % title("FRONT");
+    % 
+    % subplot(1,2,2);
+    % set(gca, 'color', 'none');
+    % set(gca,'XColor', 'none','YColor','none');
+    % plot(positions(:,1), positions(:,2), 'color', 'k', 'linewidth', 2);
+    % hold on
+    % scatter(multicats(targetpositions(current,2), 1), multicats(targetpositions(current,2), 2), 50, 'w', 'filled');
+    % axis off
+    % xlim([-150 -50]);
+    % title("BACK");
 
     sgtitle(current);
     current = current + 1;
-    set(gcf, 'position', [107         446        1211         311]);
+    set(gcf, 'position', [220         198        1042         523]);
 
     data = read(s, (5100*2 + 4), "int16");
     assert(length(find(data==-1)) == 4);

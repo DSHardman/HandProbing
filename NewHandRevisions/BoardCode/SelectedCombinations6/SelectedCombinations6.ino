@@ -962,8 +962,8 @@ void setup()
    delay(100); //# SPEED RUN
 
     calibrate_samples();
-    AD5270_Set(CHIP_SEL_MEAS, 1); // MANUALLY SET GAINS
-    AD5270_Set(CHIP_SEL_DRIVE, 1023);
+    AD5270_Set(CHIP_SEL_MEAS, 50); // MANUALLY SET GAINS
+    AD5270_Set(CHIP_SEL_DRIVE, 500);
 
     
 //    calibrate_gain(AD, AD);
@@ -1024,7 +1024,7 @@ void loop()
 {   
   uint16_t i;
 
-  if (millis() - t0 > 8500) {
+  if (millis() - t0 > 9500) {
   t0 = millis();
   read_all_at_freq(10000, NUM_ELECTRODES);
   Serial.write(0xFF);
