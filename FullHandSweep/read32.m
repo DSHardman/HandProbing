@@ -4,19 +4,19 @@ s = serialport("COM17",230400, "Timeout", 600);
 
 n = 5;
 
-alldata = zeros(n, 2*863040+4);
+alldata = zeros(n, 2*5100+4);
 
 times(n) = datetime();
 
 for i = 1:n
     i
     tic
-    data = read(s, (2*863040+4), "int16");
+    data = read(s, (2*5100+4), "int16");
     assert(length(find(data==-1)) == 4); % Fine once passed once: expect this to fail 50% of the time
     toc
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
-    save("4newhandtemptests.mat", "alldata", "times");
+    % save("4newhandtemptests.mat", "alldata", "times");
 end
 
 % data = read(s, (86300), "int16");

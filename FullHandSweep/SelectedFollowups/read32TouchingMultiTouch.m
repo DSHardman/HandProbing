@@ -22,8 +22,7 @@ end
 s = serialport("COM17",230400, "Timeout", 600);
 
 n = 500; % number of frames to record
-% alldata = zeros(n, 5568*2 + 4); % Final 4 should always be -1
-alldata = zeros(2*n, 5568*2 + 4); % Final 4 should always be -1
+alldata = zeros(2*n, 5100*2 + 4); % Final 4 should always be -1
 times(2*n) = datetime();
 
 figure();
@@ -38,17 +37,17 @@ for i = 1:n
         set(gcf, 'color', 'r');
         for j = 1:35
             j
-            read(s, (5568*2 + 4), "int16");
+            read(s, (5100*2 + 4), "int16");
         end
     elseif current == 50 % Turn peltier to cold and wait 5 minutes
         set(gcf, 'color', 'b');
         for j = 1:35
             j
-            read(s, (5568*2 + 4), "int16");
+            read(s, (5100*2 + 4), "int16");
         end
     end
 
-    data = read(s, (5568*2 + 4), "int16");
+    data = read(s, (5100*2 + 4), "int16");
     assert(length(find(data==-1)) == 4);
     alldata(i*2-1, :) = data;
     times(i*2-1) = datetime(); % save time at which frame finished collecting
@@ -79,8 +78,7 @@ for i = 1:n
     current = current + 1;
     set(gcf, 'position', [107         446        1211         311]);
 
-    % data = read(s, (5568*2 + 4), "int16");
-    data = read(s, (5568*2 + 4), "int16");
+    data = read(s, (5100*2 + 4), "int16");
     assert(length(find(data==-1)) == 4);
     alldata(i*2, :) = data;
     times(i*2) = datetime(); % save time at which frame finished collecting
