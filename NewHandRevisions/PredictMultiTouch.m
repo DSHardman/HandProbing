@@ -1,11 +1,11 @@
 load("Data\CombinedSets.mat");
 
-successes = zeros([500, 2]);
+successes = zeros([500, 3]);
 
 for n =  1:500
     n
-    for i = 1%1:2
-        [successes(n, i), score, YTest] = plotclasspredictions(responses(:, 1:2:end-3), singletargets, i, n);
+    for i = 3%1:2
+        [successes(n, i), score, YTest] = plotclasspredictions(responses(:, 1:2:end-3), alltargets, i, n);
     end
 end
 
