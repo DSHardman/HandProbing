@@ -15,7 +15,7 @@
 #define NUM_MEAS           NUM_ELECTRODES*(NUM_ELECTRODES-1)*(NUM_ELECTRODES-2)*(NUM_ELECTRODES-3)/25
 
 #define AD5930_CLK_FREQ    50000000
-#define TEST_FREQ          50000
+#define TEST_FREQ          10000
 #define NUM_PERIODS        4        // Number of signal periods to measure
 #define ADC_AVG            5        // Number of ADC samples to average for each analog reading
 
@@ -1011,8 +1011,8 @@ void setup()
    delay(100); //# SPEED RUN
 
     calibrate_samples();
-    AD5270_Set(CHIP_SEL_MEAS, 50); // MANUALLY SET GAINS
-    AD5270_Set(CHIP_SEL_DRIVE, 500);
+    AD5270_Set(CHIP_SEL_MEAS, 5); // MANUALLY SET GAINS (was 50, 500 early jan25)
+    AD5270_Set(CHIP_SEL_DRIVE, 1000);
 
     
 //    calibrate_gain(AD, AD);
