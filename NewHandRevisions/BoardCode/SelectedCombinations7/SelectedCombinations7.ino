@@ -962,8 +962,8 @@ void setup()
    delay(100); //# SPEED RUN
 
     calibrate_samples();
-    AD5270_Set(CHIP_SEL_MEAS, 5); // MANUALLY SET GAINS
-    AD5270_Set(CHIP_SEL_DRIVE, 1000);
+    AD5270_Set(CHIP_SEL_MEAS, 5); // MANUALLY SET GAINS was 5 
+    AD5270_Set(CHIP_SEL_DRIVE, 1000); // was 1000
 
     
 //    calibrate_gain(AD, AD);

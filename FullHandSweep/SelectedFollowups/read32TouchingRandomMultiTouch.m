@@ -42,7 +42,7 @@ for i = 1:5
     data = read(s, (5100*2 + 4), "int16");
 end
 
-n = 6; % number of frames to record
+n = 102; % number of frames to record
 alldata = zeros(2*n, 5100*2 + 4); % Final 4 should always be -1
 times(2*n) = datetime();
 
