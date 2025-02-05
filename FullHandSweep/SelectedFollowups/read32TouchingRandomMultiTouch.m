@@ -56,14 +56,16 @@ for i = 1:n
     clf
     if current == 25 || current == 75 % Turn peltier to hot and wait 5 minutes
         set(gcf, 'color', 'r');
-        for j = 1:35
-            j
+        tic
+        while toc < 120
+            toc
             read(s, (5100*2 + 4), "int16");
         end
     elseif current == 50 % Turn peltier to cold and wait 5 minutes
         set(gcf, 'color', 'b');
-        for j = 1:35
-            j
+        tic
+        while toc < 120
+            toc
             read(s, (5100*2 + 4), "int16");
         end
     end
