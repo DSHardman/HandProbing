@@ -1,5 +1,5 @@
 % load("Data/Dataset2/CombinedSet2.mat");
-load("Data/Dataset5/CombinedSet5Cleaned.mat");
+% load("Data/Dataset5/CombinedSet5Cleaned.mat");
 
 %% F-Test ranking for x & y positions on front & back
 ranking1 = fsrftest(responses, targetpositions(:, 1));
@@ -8,7 +8,7 @@ ranking3 = fsrftest(responses, targetpositions(:, 3));
 ranking4 = fsrftest(responses, targetpositions(:, 4));
 
 P = randperm(length(targetpositions));
-cutoff = 570; % between train & test
+cutoff = 270; % between train & test
 
 %% Linear regression for each of the 4 variables independently using top N channels
 diffs = zeros([150 ,2]);

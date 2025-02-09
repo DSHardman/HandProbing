@@ -34,16 +34,17 @@ while n < 100
 end
 
 
-s = serialport("COM17",230400, "Timeout", 600);
+s = serialport("COM20",230400, "Timeout", 600);
 
 fprintf("Starting...\n");
 for i = 1:5
     i
-    data = read(s, (5140*2 + 4), "int16");
+    data = readline(s);
+    data = str2num(data);
 end
 
 n = 102; % number of frames to record
-alldata = zeros(2*n, 5140*2 + 4); % Final 4 should always be -1
+alldata = zeros(4*n, 5140*2); % Final 4 should always be -1
 times(2*n) = datetime();
 
 figure();
@@ -57,22 +58,25 @@ for i = 1:n
     if current == 25 || current == 75 % Turn peltier to hot and wait 5 minutes
         set(gcf, 'color', 'r');
         tic
-        while toc < 120
+        while toc < 180
             toc
-            read(s, (5140*2 + 4), "int16");
+            data = readline(s);
+            data = str2num(data);
         end
     elseif current == 50 % Turn peltier to cold and wait 5 minutes
         set(gcf, 'color', 'b');
         tic
-        while toc < 120
+        while toc < 180
             toc
-            read(s, (5140*2 + 4), "int16");
+            data = readline(s);
+            data = str2num(data);
         end
     end
 
-    data = read(s, (5140*2 + 4), "int16");
-    assert(length(find(data==-1)) == 4);
-    alldata(i*2-1, :) = data;
+    data = readline(s);
+    data = str2num(data);
+    alldata(i*4-3, :) = data(1:10280);
+    alldata(i*4-2, :) = data(10281:end);
     times(i*2-1) = datetime(); % save time at which frame finished collecting
 
     current
@@ -104,9 +108,10 @@ for i = 1:n
     current = current + 1;
     set(gcf, 'position', [220         198        1042         523]);
 
-    data = read(s, (5140*2 + 4), "int16");
-    assert(length(find(data==-1)) == 4);
-    alldata(i*2, :) = data;
+    data = readline(s);
+    data = str2num(data);
+    alldata(i*4-1, :) = data(1:10280);
+    alldata(i*4, :) = data(10281:end);
     times(i*2) = datetime(); % save time at which frame finished collecting
 
     if current == 102 % Exit after last stimulation is recorded

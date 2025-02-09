@@ -1,7 +1,7 @@
 % This script tries classifying using linear discriminant analysis
 % This was the method which worked well for multitouch on the 2D membrane
 
-load("Data/Dataset1/CombinedSet1.mat");
+% load("Data/Dataset1/CombinedSet1.mat");
 % load("Data/Dataset4/CombinedSet4.mat");
 % load("Data/Dataset3/CombinedSet3.mat"); % Note this only has 5 locations on each side rather than 10
 
@@ -9,21 +9,21 @@ load("Data/Dataset1/CombinedSet1.mat");
 
 figure();
 
-max_num_channels = 100;
-num_columns = 3;
+max_num_channels = 500;
+num_columns = 2;
 
 successes = zeros([max_num_channels, num_columns]);
 for n =  1:max_num_channels
     n
-    for i = 1:num_columns
-        [successes(n, i), score, YTest] = plotclasspredictions(responses, alltargets, i, n);
+    for i = 1%:num_columns
+        [successes(n, i), score, YTest] = plotclasspredictions(alldata(2:4:end, :), temps, i, n);
     end
 end
 plot(successes);
-legend({"Front (10 classes)"; "Back (10 classes)"; "Local Temp (2 classes)"});
-ylabel("Classification Rate");
-xlabel("Num Channels");
-title("Sided Classification");
+% legend({"Front (10 classes)"; "Back (10 classes)"; "Local Temp (2 classes)"});
+% ylabel("Classification Rate");
+% xlabel("Num Channels");
+% title("Sided Classification");
 
 %% Global classification: Each of 100 touch combinations is a different class
 

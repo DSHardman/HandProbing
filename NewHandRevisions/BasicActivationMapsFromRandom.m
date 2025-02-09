@@ -1,5 +1,6 @@
 % load("Data/Dataset2/CombinedSet2.mat");
-load("Data/Dataset5/CombinedSet5Cleaned.mat");
+% load("Data/Dataset5/CombinedSet5Cleaned.mat");
+load("Data/Dataset6/CombinedSet6.mat");
 
 %% F-Test ranking for x & y positions on front & back
 ranking1 = fsrftest(responses, targetpositions(:, 1));
@@ -8,7 +9,8 @@ ranking3 = fsrftest(responses, targetpositions(:, 3));
 ranking4 = fsrftest(responses, targetpositions(:, 4));
 
 %% Look at activation maps of highest ranked channels
-for i = 1:50
+
+for i = 1:100
     subplot(2,2,1);
     scatter(targetpositions(:,1), targetpositions(:,2), 40, responses(:, ranking1(i)), 'filled');
     title("Front x");

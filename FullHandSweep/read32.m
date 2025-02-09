@@ -1,8 +1,8 @@
-s = serialport("COM17",230400, "Timeout", 600);
+s = serialport("COM20",230400, "Timeout", 600);
 % configureCallback(s, "byte", 50000, @testfunc);
 % disp(datestr(datetime("now"),'HH:MM:SS:FFF'));
 
-n = 4000;
+n = 10;
 configs = 5100;
 
 % Let data settle after starting...
@@ -28,7 +28,7 @@ for i = 1:n
     toc
     alldata(i, :) = data;
     times(i) = datetime(); % save time at which frame finished collecting
-    save("after2personcondition2nd.mat", "alldata", "times");
+    % save("after2personcondition2nd.mat", "alldata", "times");
 end
 
 % data = read(s, (86300), "int16");

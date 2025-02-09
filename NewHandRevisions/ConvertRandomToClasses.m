@@ -2,10 +2,10 @@
 % Can then be used with PredictMultiTouchFromClasses script
 
 % load("Data/Dataset2/CombinedSet2.mat");
-load("Data/Dataset5/CombinedSet5Cleaned.mat");
+% load("Data/Dataset5/CombinedSet5Cleaned.mat");
 
 % Show location of all areas
-% load("Data/Split10Areas.mat");
+load("Data/Split10Areas.mat");
 for i = 1:10
     plot(areas(i));
     hold on

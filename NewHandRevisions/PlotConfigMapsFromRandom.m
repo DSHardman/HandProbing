@@ -1,5 +1,5 @@
 % load("Data/Dataset2/CombinedSet2.mat");
-load("Data/Dataset5/CombinedSet5Cleaned.mat");
+% load("Data/Dataset5/CombinedSet5Cleaned.mat");
 
 %% Plot hand outline and choose area from user input
 load("../FullHandSweep/SelectedFollowups/TactileLocalization/HandOutline.mat");

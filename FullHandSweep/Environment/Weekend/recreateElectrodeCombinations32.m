@@ -57,6 +57,7 @@ end
 
 n = 1
 adadinds = zeros([928, 1]);
+alltargets = zeros([928, 4]);
 for i = 1:32
     targets(1) = i
     targets(2) = mod(i+1-1, 32)+1;
@@ -64,7 +65,8 @@ for i = 1:32
         if j~=targets(1) && j~=targets(2) && mod(j+1-1, 32)+1~=targets(1) && mod(j+1-1, 32)+1~=targets(2)
             targets(3) = j;
             targets(4) = mod(j+1-1, 32)+1;
-            adadinds(n) = find(ismember(electrodes,targets,'rows'));
+            alltargets(n, :) = targets;
+            % adadinds(n) = find(ismember(electrodes,targets,'rows'));
             n = n + 1;
         end
     end
