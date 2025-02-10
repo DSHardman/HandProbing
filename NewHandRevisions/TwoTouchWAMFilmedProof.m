@@ -63,23 +63,24 @@ stop = 425; % Index filming ended
 trainers = [1:length(find(keepers<start)) length(find(keepers<stop)):length(keepers)];
 testers = length(find(keepers<=start)):length(find(keepers<=stop));
 
-% figure();
-% % First figure should give better front predictions
-% % fronterror = wamtesting(frontranking(1:num_configs), responses, targetpositions, 1);
-% fronterror = wamtesting(frontranking(1:num_configs), responses, targetpositions(:, 1:2), 1, trainers, testers);
-% sgtitle("Using Front Ranking");
-% set(gcf, 'color', 'w', 'position', [25         555        1456         304]);
-% 
-% 
-% figure();
-% % Second figure should give better back predictions
-% % backerror = wamtesting(backranking(1:num_configs), responses, targetpositions, 1);
-% backerror = wamtesting(backranking(1:num_configs), responses, targetpositions(:, 3:4), 1, trainers, testers);
-% sgtitle("Using Back Ranking");
-% set(gcf, 'color', 'w', 'position', [17         163        1456         304]);
-% 
-% fronterror
-% backerror
+figure();
+% First figure should give better front predictions
+% fronterror = wamtesting(frontranking(1:num_configs), responses, targetpositions, 1);
+fronterror = wamtesting(frontranking(1:num_configs), responses, targetpositions(:, 1:2), 1, trainers, testers);
+sgtitle("Using Front Ranking");
+set(gcf, 'color', 'w', 'position', [25         555        1456         304]);
+
+
+figure();
+% Second figure should give better back predictions
+% backerror = wamtesting(backranking(1:num_configs), responses, targetpositions, 1);
+backerror = wamtesting(backranking(1:num_configs), responses, targetpositions(:, 3:4), 1, trainers, testers);
+sgtitle("Using Back Ranking");
+set(gcf, 'color', 'w', 'position', [17         163        1456         304]);
+
+fronterror
+backerror
+return
 
 %% Part 2: produce WAM convergence graph (takes a few minutes to run)
 figure();
@@ -211,24 +212,24 @@ function error = wamtesting(combinations, responses, targetpositions, figs, trai
             % end
             % contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
             % 
-            %% Apply median filtering to image: only for visualisation (not current prediction)
-            radius = 5/3.32; % In mm, with 3.32 correction factor
-            includeindex = zeros([size(targetpositions, 1)]);
-            for k = 1:size(targetpositions, 1)
-                % Calculate front medians
-                for j = 1:size(targetpositions, 1)
-                    if rssq(targetpositions(k,1:2)-targetpositions(j,1:2)) < radius
-                        includeindex(k, j) = 1;
-                    end
-                end
-            end
-
-            medianfrontsum = zeros(size(sum));
-            for k = 1:size(targetpositions, 1)
-                medianfrontsum(k, :) = median(sum(boolean(includeindex(k, :))));
-            end
-            sum = medianfrontsum;
-            %% end median filtering
+            % %% Apply median filtering to image: only for visualisation (not current prediction)
+            % radius = 5/3.32; % In mm, with 3.32 correction factor
+            % includeindex = zeros([size(targetpositions, 1)]);
+            % for k = 1:size(targetpositions, 1)
+            %     % Calculate front medians
+            %     for j = 1:size(targetpositions, 1)
+            %         if rssq(targetpositions(k,1:2)-targetpositions(j,1:2)) < radius
+            %             includeindex(k, j) = 1;
+            %         end
+            %     end
+            % end
+            % 
+            % medianfrontsum = zeros(size(sum));
+            % for k = 1:size(targetpositions, 1)
+            %     medianfrontsum(k, :) = median(sum(boolean(includeindex(k, :))));
+            % end
+            % sum = medianfrontsum;
+            % %% end median filtering
             
             scatter(targetpositions(:,1), targetpositions(:,2), 20, sum, 'filled');
             hold on
