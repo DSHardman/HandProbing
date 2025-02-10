@@ -1,9 +1,13 @@
 % load("Data/Dataset2/CombinedSet2.mat");
 load('Data/Dataset6/CombinedSet6.mat');
-responses = responses(1:800, :);
-targetpositions = targetpositions(1:800, :);
 
-responses = (normalize(responses));
+% Extract responses and remove those which were incorrectly measured by
+% electronics
+responses = alldata(4:4:end, :) - alldata(2:4:end, :);
+% keepers = 1:800;
+keepers = find(abs(mean(responses, 2) - mean(mean(responses, 2), 1))<1.5);
+responses = responses(keepers, :);
+targetpositions = targetpositions(keepers, :);
 
 % Give back touch locations a negative y position
 load("../FullHandSweep/SelectedFollowups/TactileLocalization/HandOutline.mat");
@@ -31,10 +35,10 @@ targetpositions(:, 4) = -targetpositions(:, 4);
 % ranking4 = randperm(length(responses));
 
 %% Combine into global rankings
-combinedranking = zeros([4*10200, 1]);
-frontranking = zeros([2*10200, 1]);
-backranking = zeros([2*10200, 1]);
-for i = 1:10200
+combinedranking = zeros([4*size(responses, 2), 1]);
+frontranking = zeros([2*size(responses, 2), 1]);
+backranking = zeros([2*size(responses, 2), 1]);
+for i = 1:size(responses, 2)
     combinedranking(4*i-3:4*i) = [ranking1(i); ranking2(i);...
                                     ranking3(i); ranking4(i)];
     frontranking(2*i-1:2*i) = [ranking1(i); ranking2(i)];
@@ -44,40 +48,55 @@ combinedranking = unique(combinedranking, 'stable');
 frontranking = unique(frontranking, 'stable');
 backranking = unique(backranking, 'stable');
 
+differences = zeros([size(responses, 2), 1]);
+for i = 1:size(responses, 2)
+    differences(i) = find(backranking==i) - find(frontranking==i);
+end
+[~, backunique] = sort(differences, 'ascend');
+[~, frontunique] = sort(differences, 'descend');
+
 %% WAM localization using top N channels
 % Plots results of small test set
 num_configs=5000;
+start = 401; % Index filming started
+stop = 425; % Index filming ended
+trainers = [1:length(find(keepers<start)) length(find(keepers<stop)):length(keepers)];
+testers = length(find(keepers<=start)):length(find(keepers<=stop));
+
 figure();
 % First figure should give better front predictions
-[fronterror, ~] = wamtesting(frontranking(1:num_configs), responses, targetpositions, 1);
+% [fronterror, ~] = wamtesting(frontranking(1:num_configs), responses, targetpositions, 1);
+[fronterror, ~] = wamtesting(frontranking(1:num_configs), responses, targetpositions, 1, trainers(randperm(length(trainers))), testers(randperm(length(testers))));
 sgtitle("Using Front Ranking");
 
 figure();
 % Second figure should give better back predictions
-[~, backerror] = wamtesting(backranking(1:num_configs), responses, targetpositions, 1);
+% [~, backerror] = wamtesting(backranking(1:num_configs), responses, targetpositions, 1);
+[~, backerror] = wamtesting(backranking(1:num_configs), responses, targetpositions, 1, trainers(randperm(length(trainers))), testers(randperm(length(testers))));
 sgtitle("Using Back Ranking");
 
 fronterror
 backerror
-
-figure();
-% Third figure uses combined ranking
-[error, sidepercent] = wamtesting(combinedranking(1:num_configs), responses, targetpositions, 1);
-sgtitle("Using Combined Ranking");
-error
+return
+% figure();
+% % Third figure uses combined ranking
+% [fronterror, backerror] = wamtesting(combinedranking(1:num_configs), responses, targetpositions, 1);
+% sgtitle("Using Combined Ranking");
 
 %% Part 2: produce WAM convergence graph (takes a few minutes to run)
 figure();
-repetitions = 2;
-maximumnumber = 10;
+repetitions = 1;
+maximumnumber = 7000;
 subplot(2,1,1);
-[fronterrors, ~] = convergenceplot(responses, targetpositions, repetitions,...
-    maximumnumber, 'b', frontranking);
+[fronterrors, backerrors] = convergenceplot(responses, targetpositions, repetitions,...
+    maximumnumber, 'b', frontranking, trainers, testers);
+save("frontrankingconvergence.mat", fronterrors, backerrors);
 title("Using Front Ranking");
 
 subplot(2,1,2);
-[~, backerrors] = convergenceplot(responses, targetpositions, repetitions,...
-    maximumnumber, 'b', backranking);
+[fronterrors, backerrors] = convergenceplot(responses, targetpositions, repetitions,...
+    maximumnumber, 'b', backranking, trainers, testers);
+save("backrankingconvergence.mat", fronterrors, backerrors);
 title("Using Back Ranking");
 
 sgtitle("WAM Convergence");
@@ -103,6 +122,42 @@ function [fronterror, backerror] = wamtesting(combinations, responses, targetpos
     responses = responses(traininds, :);
     targetpositions = targetpositions(traininds, :);
 
+    % responses = tanh(normalize(responses)); % Deal with outliers
+
+    %% Apply median filtering to responses - no changes outside of here
+
+    % medianfrontresponses = zeros(size(responses));
+    % radius = 5/3.32; % In mm, with 3.32 correction factor
+    % for i = 1:size(targetpositions, 1)
+    %     % Calculate front medians
+    %     includeindex = zeros([size(targetpositions, 1), 1]);
+    %     for j = 1:size(targetpositions, 1)
+    %         if rssq(targetpositions(i,1:2)-targetpositions(j,1:2)) < radius
+    %             includeindex(j) = 1;
+    %         end
+    %     end
+    %     medianfrontresponses(i, :) = median(responses(boolean(includeindex), :));
+    % end
+    % responses = medianfrontresponses;
+    % % responses = tanh(normalize(responses)); % Deal with outliers
+
+    % end median filtering - no changes outside of here
+
+    % %% Apply median filtering to sum pt 1- no changes outside of here
+    % 
+    % radius = 5/3.32; % In mm, with 3.32 correction factor
+    % includeindex = zeros([size(targetpositions, 1)]);
+    % for k = 1:size(targetpositions, 1)
+    %     % Calculate front medians
+    %     for j = 1:size(targetpositions, 1)
+    %         if rssq(targetpositions(k,1:2)-targetpositions(j,1:2)) < radius
+    %             includeindex(k, j) = 1;
+    %         end
+    %     end
+    % end
+    % 
+    % %% end median filtering pt 1- no changes outside of here
+
     % WAM using training set to predict test set
     fronterror = 0;
     backerror = 0;
@@ -118,6 +173,14 @@ function [fronterror, backerror] = wamtesting(combinations, responses, targetpos
                 sum = sum + newsum;
             end
         end
+
+        % % median filtering to sum pt 2
+        % medianfrontsum = zeros(size(sum));
+        % for k = 1:size(targetpositions, 1)
+        %     medianfrontsum(k, :) = median(sum(boolean(includeindex(k, :))));
+        % end
+        % sum = medianfrontsum;
+        % % end pt 2
 
         % Prediction is the average location of the n brightest pixels
         % n can be changed - 8 has worked best in the past
@@ -187,22 +250,27 @@ end
 
 %% Plot convergence graph
 
-function [fronterrors, backerrors] = convergenceplot(responses, targetpositions, repetitions, maximumnumber, col, ranking)
+function [fronterrors, backerrors] = convergenceplot(responses, targetpositions, repetitions, maximumnumber, col, ranking, trainers, testers)
     fronterrors = zeros([maximumnumber, repetitions]);
     backerrors = zeros([maximumnumber, repetitions]);
+
    
     for i = 1:maximumnumber
-        i;
+        i
         for j = 1:repetitions
-            [fronterror, backerror] = wamtesting(ranking(1:i), responses, targetpositions, 0);
+            if nargin==8
+                [fronterror, backerror] = wamtesting(ranking(1:i), responses, targetpositions, 0, trainers, testers);
+            elseif nargin == 6
+                [fronterror, backerror] = wamtesting(ranking(1:i), responses, targetpositions, 0);
+            end
             fronterrors(i, j) = fronterror;
             backerrors(i, j) = backerror;
         end
     end
 
-    plot(mean(fronterrors.'), 'linewidth', 2, 'color', col);
+    plot(mean(fronterrors(1:maximumnumber, :), 2), 'linewidth', 2, 'color', col);
     hold on
-    plot(mean(backerrors.'), 'linewidth', 2, 'color', 'k');
+    plot(mean(backerrors(1:maximumnumber, :), 2), 'linewidth', 2, 'color', 'k');
     legend({"Front"; "Back"});
     ylabel("Average Error (mm)");
     xlabel("Number of channels");

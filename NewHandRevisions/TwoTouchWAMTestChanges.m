@@ -61,13 +61,13 @@ end
 
 figure();
 % First figure should give better front predictions
-[fronterror, ~] = wamtesting(frontranking(1:500), responses, targetpositions, 1);
+[fronterror, ~] = wamtesting(frontranking(1:5000), responses, targetpositions, 1);
 sgtitle("Using Front Ranking");
 
 
 figure();
 % Second figure should give better back predictions
-[~, backerror] = wamtesting(backranking(1:2000), responses, targetpositions, 1);
+[~, backerror] = wamtesting(backranking(1:5000), responses, targetpositions, 1);
 sgtitle("Using Back Ranking");
 
 fronterror

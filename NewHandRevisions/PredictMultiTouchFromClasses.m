@@ -4,18 +4,17 @@
 % load("Data/Dataset1/CombinedSet1.mat");
 % load("Data/Dataset4/CombinedSet4.mat");
 % load("Data/Dataset3/CombinedSet3.mat"); % Note this only has 5 locations on each side rather than 10
-
 %% Sided Classification: Try to classify which of 10 locations is being touched on front & back separately
 
 figure();
 
-max_num_channels = 500;
-num_columns = 2;
+max_num_channels = 100;
+num_columns = 1;
 
 successes = zeros([max_num_channels, num_columns]);
 for n =  1:max_num_channels
     n
-    for i = 1%:num_columns
+    for i = 1:num_columns
         [successes(n, i), score, YTest] = plotclasspredictions(alldata(2:4:end, :), temps, i, n);
     end
 end
@@ -68,23 +67,28 @@ title("Binary Classification");
 
 
 %% Plot local temperature classification
-return % save for figure making
-load("Data/Dataset1/CombinedSets.mat");
+% save for figure making
+load("Data/Dataset6/CombinedSet6.mat");
+responses = alldata(4:4:end, :) - alldata(2:4:end, :);
+keepers = find(abs(mean(responses, 2) - mean(mean(responses, 2), 1))<1.5);
+empties = alldata(2:4:end, :);
+empties = empties(keepers, :);
+
 figure();
 successes = zeros([80, 10]);
-for n =  1:80
+for n =  1:120
     n
     for i = 1:10
-        [successes(n, i), score, YTest] = plotclasspredictions(responses, alltargets(:,3), 1, n);
+        [successes(n, i), score, YTest] = plotclasspredictions(alldata(2:4:end, :), temps, 1, n);
     end
 end
-plot(100*mean(successes.'), 'linewidth', 2);
+plot(100*mean(successes.'), 'linewidth', 2, 'color', 'b');
 box off
 ylim([50 100]);
 set(gca, 'fontsize', 15, 'LineWidth', 2);
-ylabel("Local Temperature Classification (%)");
-xlabel("Number of Channels Monitored");
-set(gcf, 'position', [488   266   742   492], 'color', 'w');
+ylabel("Prediction Success (%)");
+xlabel("Number of Channels");
+set(gcf, 'position', [489   339   483   300], 'color', 'w');
 
 %% Supervised clustering (discriminant analysis)
 
