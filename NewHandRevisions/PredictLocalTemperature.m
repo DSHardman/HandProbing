@@ -22,6 +22,22 @@ ylim([-0.1 1.15])
 set(gcf, 'color', 'w', 'position', [76   304   840   346]);
 set(gca, 'linewidth', 2, 'fontsize', 15);
 
+% v = VideoWriter("temps.avi");
+% v.set('FrameRate', 20, 'Quality', 100);
+% open(v);
+% for i = 402:483
+%     plot(401:i, score(1:i-400, 2), 'color', 1/255*[0 124 49], 'linewidth', 3);
+%     writeVideo(v, getframe(gcf));
+% end
+% for i = 484:485
+%     plot(483:i, score(83:i-400, 2), 'color', 'r', 'linewidth', 4);
+%     writeVideo(v, getframe(gcf));
+% end
+% for i = 486:600
+%     plot(485:i, score(85:i-400, 2), 'color', 1/255*[0 124 49], 'linewidth', 3);
+%     writeVideo(v, getframe(gcf));
+% end
+% v.close();
 
 
 %% Supervised clustering (discriminant analysis)
