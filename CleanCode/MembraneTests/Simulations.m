@@ -1,6 +1,6 @@
 % Electric field simulations in Figure 2
 % EIDORS must be added to path to run simulations
-eidors_startup % Initialize
+% eidors_startup % Initialize
 
 %% Part 1: visualise fields for electrode configuration 1598
 calculatefields(1000, 0, 3, 1);  % Homogeneous

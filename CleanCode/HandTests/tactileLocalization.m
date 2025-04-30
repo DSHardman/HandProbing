@@ -1,20 +1,31 @@
-% Figure 6b & c tactile localizations
+% Figure 6 tactile localizations
 
-%% Logistics: load in data for 399 light touches
-load("Data/Touch399Data.mat");
-load("Data/HandOutline.mat");
 
-responses = responses(1:399, :); % If disregarding final 100
-targetpositions = targetpositions(1:399, :); % If disregarding final 100
+%% Logistics: load in data for 1080 light touches
+load("Data/ExtractedSingleTouches.mat"); % [x y side_boolean]
+
+% Give back touch locations a negative y position
+load("HandOutline.mat");
+targetpositions(:, 2) = targetpositions(:, 2) - min(outline(:, 2));
+outline(:,2) = outline(:,2)-min(outline(:,2));
+idx = find(targetpositions(:,3) == 1);
+targetpositions(idx, 2) = -targetpositions(idx, 2);
+
+% Extract response magnitudes
+responses = zeros([length(targetpositions), size(alldata, 2)]);
+for i = 1:length(targetpositions)
+    responses(i, :) = alldata(2*i, :) - alldata(2*i-1, :);
+end
 
 %% Perform F-Test ranking
 ranking = franking(responses, targetpositions);
 
-%% WAM localization using top 100 channels: plot 10 random predictions from test set
+%% WAM localization using top N channels: plot 10 random predictions from test set
 % Prediction in pink, ground truth in red
+% Black shows prediction for other side, if this is predicted incorrectly
 figure();
-error = wamtesting(ranking(1:100), responses, targetpositions, 1);
-sgtitle("Mean error over entire test set: "+ string(error) + " mm");
+error = wamtesting(ranking(1:400), responses, targetpositions, 1);
+sgtitle("Mean error over entire test set: "+ string(error) + " mm, ");
 
 %% Plot sensitivity maps of top 10 configurations
 figure();
@@ -29,7 +40,7 @@ for i = 1:10
     % Remove points from outside hand
     for k = 1:size(xx,1)
         for j = 1:size(xx,2)
-            if ~inpolygon(xx(k,j),yy(k,j), outline(:,1), outline(:,2))
+            if ~inpolygon(xx(k,j),abs(yy(k,j)), outline(:,1), outline(:,2))
                 value_interp(k,j) = nan;
             end
         end
@@ -37,7 +48,9 @@ for i = 1:10
     contourf(xx,yy,value_interp, 100, 'LineStyle', 'none');
     axis off
     colormap hot
+    title(string(i));
 end
+sgtitle("Sensitivity maps of top 10 configurations");
 
 
 %% F-Test Ranking
@@ -56,11 +69,12 @@ end
 
 %% Implement WAM method from Hardman et al., Tactile Perception in Hydrogel-based Robotic Skins, 2023
 function error = wamtesting(combinations, responses, targetpositions, figs)
-    load("Data/HandOutline.mat");
-        
+    load("HandOutline.mat");
+    outline(:,2) = outline(:,2)-min(outline(:,2));
+
     responses = tanh(normalize(responses)); % Deal with outliers
 
-    % Generate test & train sets
+    % % Generate test & train sets
     P = randperm(length(targetpositions));
     traininds = P(1:floor(0.9*length(targetpositions)));
     testinds = P(ceil(0.9*length(targetpositions)):end);
@@ -83,18 +97,50 @@ function error = wamtesting(combinations, responses, targetpositions, figs)
             end
         end
 
-        % Prediction is the average location of the 10 brightest pixels
+        % Prediction is the average location of the n brightest pixels
         [~, ind] = sort(sum, 'descend');
-        n = min(10, size(responses, 2));
-        prediction = [mean(targetpositions(ind(1:n), 1)),...
-                        mean(targetpositions(ind(1:n), 2))];
+        n = min(8, size(responses, 2));
+
+        % Average over n brightest pixels on each side
+        frontprediction = [0 0];
+        backprediction = [0 0];
+        frontcount = 0;
+        frontsum = 0;
+        backcount = 0;
+        backsum = 0;
+        k = 1;
+        while 1
+            if targetpositions(ind(k), 3) == 0 && frontcount < n
+                frontprediction = frontprediction + targetpositions(ind(k), 1:2);
+                frontcount = frontcount + 1;
+                frontsum = frontsum + sum(ind(k));
+            elseif targetpositions(ind(k), 3) == 1 && backcount < n
+                backprediction = backprediction + targetpositions(ind(k), 1:2);
+                backcount = backcount + 1;
+                backsum = backsum + sum(ind(k));
+            end
+            k = k + 1;
+            if frontcount == n && backcount == n
+                break
+            end
+
+            % Deal with data from a single side
+            if k > size(targetpositions, 1)
+                break
+            end
+        end
+        frontprediction = frontprediction./n;
+        backprediction = backprediction./n;
+
 
         % Add localization error to running sum 
-        error = error + rssq(prediction-testpositions(i,:));
+        error = error + min([rssq(abs(frontprediction)-abs(testpositions(i, 1:2))),...
+            rssq(abs(backprediction)-abs(testpositions(i, 1:2)))]);
 
         % Plot prediction
         if figs && i <= 10
             subplot(2,5,i);
+
             vals = sum;
             interpolant = scatteredInterpolant(targetpositions(:,1), targetpositions(:,2), vals);
             [xx,yy] = meshgrid(linspace(min(targetpositions(:,1)), max(targetpositions(:,1)),100),...
@@ -105,7 +151,7 @@ function error = wamtesting(combinations, responses, targetpositions, figs)
             % Remove points from outside hand
             for k = 1:size(xx,1)
                 for j = 1:size(xx,2)
-                    if ~inpolygon(xx(k,j),yy(k,j), outline(:,1), outline(:,2))
+                    if ~inpolygon(xx(k,j),abs(yy(k,j)), outline(:,1), outline(:,2))
                         value_interp(k,j) = nan;
                     end
                 end
@@ -115,9 +161,18 @@ function error = wamtesting(combinations, responses, targetpositions, figs)
             hold on
             % Add ground truth and predicted touch locations
             scatter(testpositions(i, 1), testpositions(i, 2), 50, 'r', 'filled');
-            scatter(prediction(1), prediction(2), 50, 'm', 'filled');
+
+            if frontsum > backsum
+                scatter(frontprediction(1), frontprediction(2), 50, 'm', 'filled');
+                scatter(backprediction(1), backprediction(2), 30, 'k', 'filled');
+            else
+                scatter(backprediction(1), backprediction(2), 50, 'm', 'filled');
+                scatter(frontprediction(1), frontprediction(2), 30, 'k', 'filled');
+            end
+
             axis off
             set(gcf, 'color', 'w');
+
         end
     end
     error = error/size(testresponses, 1); % calculate mean
